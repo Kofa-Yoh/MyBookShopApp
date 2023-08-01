@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import org.postgresql.shaded.com.ongres.scram.common.bouncycastle.pbkdf2.Integers;
 
 import java.util.Date;
 
@@ -54,6 +55,14 @@ public class Book {
     @Column(name = "discount")
     @JsonProperty(value = "discount")
     private Double price;
+
+    public Integer getDiscountPercent(){
+        return (int) Math.floor(price * 100);
+    }
+
+    public Long getPriceWithDiscount(){
+        return Math.round(priceOld * (1 - price));
+    }
 
     @Override
     public String toString() {

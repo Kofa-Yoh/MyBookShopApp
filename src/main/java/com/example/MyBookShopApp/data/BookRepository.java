@@ -29,4 +29,9 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
     List<Book> getBooksWithMaxDiscount();
 
     Page<Book> findBookByTitleContaining(String bookTitle, Pageable nextPage);
+
+    Page<Book> findAllByOrderByPubDateDesc(Pageable nextPage);
+
+    @Query("from Book where isBestseller = 1")
+    Page<Book> getPopularBooks(Pageable nextPage);
 }
