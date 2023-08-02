@@ -52,38 +52,21 @@ public class MainPageController {
         return "index";
     }
 
-    @GetMapping("/books/recommended")
+    @GetMapping("/recommended")
     @ResponseBody
     public BooksPageDto getRecommendedBooksPage(@RequestParam("offset") Integer offset, @RequestParam("limit") Integer limit){
         return new BooksPageDto(bookService.getPageOfRecommendedBooks(offset, limit).getContent());
     }
 
-    @GetMapping("/books/recent")
+    @GetMapping("/recent")
     @ResponseBody
     public BooksPageDto getRecentBooksPage(@RequestParam("offset") Integer offset, @RequestParam("limit") Integer limit){
         return new BooksPageDto(bookService.getPageOfRecentBooks(offset, limit).getContent());
     }
 
-    @GetMapping("/books/popular")
+    @GetMapping("/popular")
     @ResponseBody
     public BooksPageDto getPopularBooksPage(@RequestParam("offset") Integer offset, @RequestParam("limit") Integer limit){
         return new BooksPageDto(bookService.getPageOfPopularBooks(offset, limit).getContent());
-    }
-
-    @GetMapping({"search", "search/{searchWord}"})
-    public String getSearchResults(@PathVariable(value = "searchWord", required = false) SearchWordDto searchWordDto,
-                                   Model model){
-        model.addAttribute("searchWordDto", searchWordDto);
-        model.addAttribute("searchResults",
-                bookService.getPageOfSearchResultBooks(searchWordDto.getExample(), 0, 5).getContent());
-        return "/search/index";
-    }
-
-    @GetMapping("/search/page/{searchWord}")
-    @ResponseBody
-    public BooksPageDto getNextSearchPage(@RequestParam("offset") Integer offset,
-                                          @RequestParam("limit") Integer limit,
-                                          @PathVariable(value = "searchWord", required = false) SearchWordDto searchWordDto){
-        return new BooksPageDto(bookService.getPageOfSearchResultBooks(searchWordDto.getExample(), offset, limit).getContent());
     }
 }

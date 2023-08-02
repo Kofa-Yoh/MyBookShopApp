@@ -44,15 +44,15 @@
         <div class="wrap">
             <nav class="menuModal" id="navigate">
                 <ul class="menu menu_main">
-                    <li class="menu-item menu-item_ACTIVE"><a class="menu-link" href="/index.html" th:href="@{/}">Главная</a>
+                    <li th:class="${main}" class="menu-item"><a class="menu-link" href="/index.html" th:href="@{/}">Главная</a>
                     </li>
-                    <li class="menu-item"><a class="menu-link" href="/genres/index.html">Жанры</a>
+                    <li th:class="${genres}" class="menu-item"><a class="menu-link" href="/genres/index.html">Жанры</a>
                     </li>
-                    <li class="menu-item"><a class="menu-link" href="/books/recent.html">Новинки</a>
+                    <li th:class="${recent}" class="menu-item"><a class="menu-link" href="/books/recent.html" th:href="@{/books/recent}">Новинки</a>
                     </li>
-                    <li class="menu-item"><a class="menu-link" href="/books/popular.html">Популярное</a>
+                    <li th:class="${popular}" class="menu-item"><a class="menu-link" href="/books/popular.html">Популярное</a>
                     </li>
-                    <li class="menu-item"><a class="menu-link" href="/authors/index.html" th:href="@{/authors}">Авторы</a>
+                    <li th:class="${authors}" class="menu-item"><a class="menu-link" href="/authors/index.html" th:href="@{/authors}">Авторы</a>
                     </li>
                 </ul>
             </nav>
