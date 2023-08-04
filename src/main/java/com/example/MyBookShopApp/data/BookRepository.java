@@ -37,4 +37,6 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 
     @Query("from Book where isBestseller = 1")
     Page<Book> getPopularBooks(Pageable nextPage);
+
+    Page<Book> findBookByTags_Name(String tag, Pageable nextPage);
 }

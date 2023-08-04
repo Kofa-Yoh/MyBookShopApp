@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.Set;
 
 @Schema(description = "Book object")
 @Entity
@@ -58,6 +59,14 @@ public class Book {
     @OneToOne(mappedBy = "book")
     @JsonIgnore
     private BooksStatistic statistic;
+
+    @ManyToMany
+    @JsonIgnore
+    @JoinTable(
+            name = "books_tags",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private Set<Tag> tags;
 
     public Integer getDiscountPercent(){
         return (int) Math.floor(price * 100);
@@ -164,5 +173,13 @@ public class Book {
 
     public void setStatistic(BooksStatistic statistic) {
         this.statistic = statistic;
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
     }
 }

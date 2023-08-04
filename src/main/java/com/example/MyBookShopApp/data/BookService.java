@@ -48,6 +48,11 @@ public class BookService {
         return bookRepository.findBookByTitleContaining(searchWord, nextPage);
     }
 
+    public Page<Book> getPageOfSearchTagResultBooks(String tag, Integer offset, Integer limit) {
+        Pageable nextPage = PageRequest.of(offset, limit);
+        return bookRepository.findBookByTags_Name(tag, nextPage);
+    }
+
     public List<Book> getBooksByAuthor(String authorName){
         return bookRepository.findBooksByAuthorNameContaining(authorName);
     }
