@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!-- Жанр с подразделами -->
+<th:block th:fragment="genre_root" class="Tags">
+    <div class="Tags" th:each="genre : ${genres}">
+        <div class="Tags-title">
+            <div class="Tag" th:insert="~{fragments/genre_item_fragment :: genre_simple_tag(genre=${genre})}"></div>
+        </div>
+        <th:block th:each="genre : ${genre.children}">
+            <div th:replace="${genre?.children.size() > 0} ?
+                ~{fragments/genre_item_fragment :: genre_root(genres=${genre})} :
+                ~{fragments/genre_item_fragment :: genre_simple_tag(genre=${genre})}"></div>
+        </th:block>
+    </div>
+</th:block>
+<!-- Жанр без подразделов -->
+<div th:fragment="genre_simple_tag" class="Tag">
+    <a th:href="'/genres/' + ${genre.name}" href="/genres/slug.html" th:utext="${genre.name} + '<span class=\'undefined-amount\'>(' + ${genre.books.size()} + ')</span>'">Классика (18)
+    </a>
+</div>
+</html>

@@ -53,6 +53,11 @@ public class BookService {
         return bookRepository.findBookByTags_Name(tag, nextPage);
     }
 
+    public Page<Book> getPageOfSearchGenreResultBooks(String genre, Integer offset, Integer limit) {
+        Pageable nextPage = PageRequest.of(offset, limit);
+        return bookRepository.findBookByGenres_Name(genre, nextPage);
+    }
+
     public List<Book> getBooksByAuthor(String authorName){
         return bookRepository.findBooksByAuthorNameContaining(authorName);
     }

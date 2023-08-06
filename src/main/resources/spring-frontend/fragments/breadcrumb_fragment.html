@@ -3,9 +3,19 @@
 <ul class="breadcrumbs" th:fragment="breadcrumps">
     <li class="breadcrumbs-item"><a th:href="@{/}" href="/index.html">Главная</a>
     </li>
-    <li th:if="${second} == 'true'" class="breadcrumbs-item"><a th:href="@{/genres}" href="/genres/index.html">Книги</a>
+    <li th:if="${mainPage} != ''" class="breadcrumbs-item"><a th:href="${mainPageLink}" href="/genres/index.html" th:text="${mainPage}">Книги</a>
     </li>
-    <li class="breadcrumbs-item breadcrumbs-item_current" th:text="${category}"><span>Новинки</span>
+    <th:block th:insert="${genre?.root} != null ? ~{fragments/breadcrumb_fragment :: breadcrumbs_li_genre(genre=${genre.root})} : _"></th:block>
+    <li class="breadcrumbs-item breadcrumbs-item_current" th:text="${page}"><span>Новинки</span>
     </li>
 </ul>
+
+<!-- Genres hierarhy in breadcrumbs -->
+<th:block th:fragment="breadcrumbs_li_genre">
+    <li class="breadcrumbs-item" th:insert="${genre?.root} != null ?
+                                            ~{fragments/breadcrumb_fragment :: breadcrumbs_li_genre(genre=${genre.root})} : _"></li>
+    <li class="breadcrumbs-item">
+        <a th:href="@{'/genres/' + ${genre.name}}" href="/genres/index.html" th:text="${genre.name}">Детектив</a>
+    </li>
+</th:block>
 </html>
