@@ -1,3 +1,7 @@
+INSERT INTO genres (id, name, root_id) VALUES (9, 'Деловая литература', null);
+INSERT INTO genres (id, name, root_id) VALUES (1, 'Легкое чтение', null);
+INSERT INTO genres (id, name, root_id) VALUES (14, 'Серьезное чтение', null);
+INSERT INTO genres (id, name, root_id) VALUES (4, 'Детектив', 1);
 INSERT INTO genres (id, name, root_id) VALUES (6, 'Триллер', 4);
 INSERT INTO genres (id, name, root_id) VALUES (7, 'Триллер-детектив', 6);
 INSERT INTO genres (id, name, root_id) VALUES (8, 'Про маньяков', 4);
@@ -7,8 +11,4 @@ INSERT INTO genres (id, name, root_id) VALUES (12, 'Ужасы', 1);
 INSERT INTO genres (id, name, root_id) VALUES (13, 'Романы', 1);
 INSERT INTO genres (id, name, root_id) VALUES (2, 'Фантастика', 1);
 INSERT INTO genres (id, name, root_id) VALUES (3, 'Боевики', 1);
-INSERT INTO genres (id, name, root_id) VALUES (14, 'Серьезное чтение', null);
 INSERT INTO genres (id, name, root_id) VALUES (5, 'Крутой детектив', 4);
-INSERT INTO genres (id, name, root_id) VALUES (4, 'Детектив', 1);
-INSERT INTO genres (id, name, root_id) VALUES (9, 'Деловая литература', null);
-INSERT INTO genres (id, name, root_id) VALUES (1, 'Легкое чтение', null);
