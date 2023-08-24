@@ -3,17 +3,9 @@ package com.example.MyBookShopApp.config;
 import com.example.MyBookShopApp.data.BookRepository;
 import com.example.MyBookShopApp.data.TestEntity;
 import com.example.MyBookShopApp.data.TestEntityCrudRepository;
-import com.example.MyBookShopApp.data.TestEntityDao;
-import jakarta.persistence.EntityManagerFactory;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Configuration;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
@@ -51,7 +43,7 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
 
         deleteTestEntityById(4L);
 
-        Logger.getLogger(CommandLineRunnerImpl.class.getSimpleName()).info(bookRepository.findBooksByAuthor_Name("Anselma McKennan").toString());
+        Logger.getLogger(CommandLineRunnerImpl.class.getSimpleName()).info(bookRepository.findBooksByBook2Authors_Author_Name("Anselma McKennan").toString());
         Logger.getLogger(CommandLineRunnerImpl.class.getSimpleName()).info(bookRepository.customFindAllBooks().toString());
     }
 
