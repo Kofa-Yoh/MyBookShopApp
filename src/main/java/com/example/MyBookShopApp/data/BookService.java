@@ -43,6 +43,11 @@ public class BookService {
         return bookRepository.getPopularBooks(nextPage);
     }
 
+    public Page<Book> getPageOfBooksByAuthorSlug(String authorSlug, Integer offset, Integer limit){
+        Pageable nextPage = PageRequest.of(offset, limit);
+        return bookRepository.findBooksByBook2Authors_Author_Slug(authorSlug, nextPage);
+    }
+
     public Page<Book> getPageOfSearchResultBooks(String searchWord, Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
         return bookRepository.findBookByTitleContaining(searchWord, nextPage);
@@ -58,8 +63,12 @@ public class BookService {
         return bookRepository.findBookByGenres_Name(genre, nextPage);
     }
 
-    public List<Book> getBooksByAuthor(String authorName){
-        return bookRepository.findBooksByAuthorNameContaining(authorName);
+    public List<Book> getBooksByAuthorName(String authorName){
+        return bookRepository.findBooksByBook2Authors_Author_NameContaining(authorName);
+    }
+
+    public List<Book> getBooksByAuthorSlug(String authorSlug){
+        return bookRepository.findBooksByBook2Authors_Author_Slug(authorSlug);
     }
 
     public List<Book> getBooksByTitle(String title){

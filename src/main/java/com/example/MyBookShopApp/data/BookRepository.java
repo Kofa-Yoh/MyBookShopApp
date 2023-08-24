@@ -10,12 +10,15 @@ import java.util.List;
 
 public interface BookRepository extends JpaRepository<Book, Integer> {
 
-    List<Book> findBooksByAuthor_Name(String name);
+    List<Book> findBooksByBook2Authors_Author_Name(String name);
 
     @Query("from Book")
     List<Book> customFindAllBooks();
 
-    List<Book> findBooksByAuthorNameContaining(String authorName);
+//    List<Book> findBooksByAuthorNameContaining(String authorName);
+    List<Book> findBooksByBook2Authors_Author_NameContaining(String authorName);
+
+    List<Book> findBooksByBook2Authors_Author_Slug(String authorSlug);
 
     List<Book> findBooksByTitleContaining(String bookTitle);
 
@@ -37,6 +40,8 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 
     @Query("from Book where isBestseller = 1")
     Page<Book> getPopularBooks(Pageable nextPage);
+
+    Page<Book> findBooksByBook2Authors_Author_Slug(String authorSlug, Pageable nextPage);
 
     Page<Book> findBookByTags_Name(String tag, Pageable nextPage);
 

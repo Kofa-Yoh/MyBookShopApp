@@ -28,7 +28,7 @@ public class BooksRestApiController {
     @Operation(summary = "Get book list by author's name", description = "operation to get book list by part of author's name")
     public ResponseEntity<List<Book>> booksByAuthor(@Parameter(description = "Enter the author's name or it's part", example = "Anselma")
                                                         @RequestParam("author") String authorName){
-        return ResponseEntity.ok(bookService.getBooksByAuthor(authorName));
+        return ResponseEntity.ok(bookService.getBooksByAuthorName(authorName));
     }
 
     @GetMapping("/books/by-title")
