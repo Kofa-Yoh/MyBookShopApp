@@ -33,7 +33,7 @@
 </div>
 <!-- One book card -->
 <div class="Card" th:fragment="card">
-        <div class="Card-picture"><a href="#">
+        <div class="Card-picture"><a th:href="@{'/books/' + ${book.slug}}" href="#">
             <img th:src="${book.image}" src="/assets/img/content/main/card.jpg" alt="card.jpg"/></a>
             <div th:if="${book.price} > 0" class="Card-sale"
                  th:text="${book.getDiscountPercent()} + '% скидка'">30% скидка
@@ -43,7 +43,7 @@
             <a th:if="0==1" class="Card-status" title="Куплена"><img src="/assets/img/icons/check.svg" alt="check.svg"/></a>
         </div>
         <div class="Card-content">
-            <strong class="Card-title"><a href="#" th:text="${book.title}">Великая Отечественная война. 1941-1945</a>
+            <strong class="Card-title"><a th:href="@{'/books/' + ${book.slug}}" href="#" th:text="${book.title}">Великая Отечественная война. 1941-1945</a>
             </strong>
             <div class="Card-description" th:text="${book.getBookAuthors()}">Солопенко Алла, Меркулов Дмитрий
             </div>

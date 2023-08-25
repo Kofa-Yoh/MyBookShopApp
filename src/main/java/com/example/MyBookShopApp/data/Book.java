@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -77,12 +78,30 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private Set<Genre> genres;
 
+    @JsonProperty(value = "discountPercent")
     public Integer getDiscountPercent(){
         return (int) Math.floor(price * 100);
     }
 
-    public Long getPriceWithDiscount(){
-        return Math.round(priceOld * (1 - price));
+    @JsonProperty(value = "discountPrice")
+    public Integer getPriceWithDiscount(){
+        return Math.toIntExact(Math.round(priceOld * (1 - price)));
+    }
+
+    @JsonProperty(value = "authors")
+    public String getBookAuthors(){
+        return book2Authors.stream()
+                .sorted(Comparator.comparing(Book2Author::getSortIndex))
+                .map(book2Author -> book2Author.getAuthor().getName())
+                .collect(Collectors.joining(", "));
+    }
+
+    @JsonProperty(value = "authorsList")
+    public List<Author> getBookAthorsList(){
+        return book2Authors.stream()
+                .sorted(Comparator.comparing(Book2Author::getSortIndex))
+                .map(book2Author -> book2Author.getAuthor())
+                .toList();
     }
 
     @Override
@@ -93,13 +112,6 @@ public class Book {
                 ", priceOld='" + priceOld + '\'' +
                 ", price='" + price + '\'' +
                 '}';
-    }
-
-    public String getBookAuthors(){
-        return book2Authors.stream()
-                .sorted(Comparator.comparing(Book2Author::getSortIndex))
-                .map(book2Author -> book2Author.getAuthor().getName())
-                .collect(Collectors.joining(", "));
     }
 
     public Integer getId() {
