@@ -5,10 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Schema(description = "Book object")
@@ -57,6 +54,10 @@ public class Book {
     @OneToMany(mappedBy = "book")
     @JsonIgnore
     Set<Book2Author> book2Authors;
+
+    @OneToMany(mappedBy = "book")
+    @JsonIgnore
+    List<BookFile> bookFileList = new ArrayList<>();
 
     @OneToOne(mappedBy = "book")
     @JsonIgnore
@@ -192,6 +193,14 @@ public class Book {
 
     public void setBook2Authors(Set<Book2Author> book2Authors) {
         this.book2Authors = book2Authors;
+    }
+
+    public List<BookFile> getBookFileList() {
+        return bookFileList;
+    }
+
+    public void setBookFileList(List<BookFile> bookFileList) {
+        this.bookFileList = bookFileList;
     }
 
     public BooksStatistic getStatistic() {
