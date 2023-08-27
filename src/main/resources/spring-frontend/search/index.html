@@ -60,7 +60,8 @@ p.error-browser
           <h2 class="Section-title Middle-searchHeader" th:text="${'Найдено книг: ' + searchResults.size()}">Найдено 0 книг
           </h2>
         </header>
-        <div class="Cards Cards_search Cards_refresh">
+        <div class="Cards Cards_search Cards_refresh" th:replace="~{fragments/card_fragment :: cardFragment(category='search',query='',refreshid=${searchWordDto.example},booksList=${searchResults})}"></div>
+        <!--<div class="Cards Cards_search Cards_refresh">
           <div class="Card" th:each="book : ${searchResults}">
             <div class="Card-picture">
               <a href="#"><img th:src="${book.image}" src="/assets/img/content/main/card.jpg" alt="card.jpg"/></a>
@@ -82,7 +83,7 @@ p.error-browser
             <a class="btn btn_primary" href="#" data-refreshshow="search" data-refreshoffset="0" data-refreshlimit="5"
                th:attr="data-refreshquery=${searchWordDto.example}" data-refreshquery="">Показать еще</a>
           </div>
-        </div>
+        </div>-->
       </div>
     </main>
   </div>
