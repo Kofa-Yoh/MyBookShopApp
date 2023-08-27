@@ -115,7 +115,7 @@
                   </div>
                   <div class="Cart-price" th:text="${book.getPriceWithDiscount() + ' р.'}">180 р.
                   </div>
-                  <div class="Cart-sale" th:text="${'-' + book.getDiscountPercent() + '%'}">-30%
+                  <div class="Cart-sale" th:if="${book.price > 0}" th:text="${'-' + book.getDiscountPercent() + '%'}">-30%
                   </div>
                 </div>
               </div>
