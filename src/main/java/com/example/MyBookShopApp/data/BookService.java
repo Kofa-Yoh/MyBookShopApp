@@ -24,17 +24,17 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    public Page<Book> getPageOfRecommendedBooks(Integer offset, Integer limit){
+    public Page<Book> getPageOfRecommendedBooks(Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
         return bookRepository.findAll(nextPage);
     }
 
-    public Page<Book> getPageOfRecentBooks(Integer offset, Integer limit){
+    public Page<Book> getPageOfRecentBooks(Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
         return bookRepository.findAllByOrderByPubDateDesc(nextPage);
     }
 
-    public Page<Book> getPageOfRecentBooksByPubDateBetween(Date begin, Date end, Integer offset, Integer limit){
+    public Page<Book> getPageOfRecentBooksByPubDateBetween(Date begin, Date end, Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
         return bookRepository.findByPubDateBetween(begin, end, nextPage);
     }
@@ -44,7 +44,7 @@ public class BookService {
         return bookRepository.getPopularBooks(nextPage);
     }
 
-    public Page<Book> getPageOfBooksByAuthorSlug(String authorSlug, Integer offset, Integer limit){
+    public Page<Book> getPageOfBooksByAuthorSlug(String authorSlug, Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
         return bookRepository.findBooksByBook2Authors_Author_Slug(authorSlug, nextPage);
     }
@@ -64,11 +64,11 @@ public class BookService {
         return bookRepository.findBookByGenres_Name(genre, nextPage);
     }
 
-    public List<Book> getBooksByAuthorName(String authorName){
+    public List<Book> getBooksByAuthorName(String authorName) {
         return bookRepository.findBooksByBook2Authors_Author_NameContaining(authorName);
     }
 
-    public List<Book> getBooksByAuthorSlug(String authorSlug){
+    public List<Book> getBooksByAuthorSlug(String authorSlug) {
         return bookRepository.findBooksByBook2Authors_Author_Slug(authorSlug);
     }
 
@@ -85,19 +85,19 @@ public class BookService {
         }
     }
 
-    public List<Book> getBooksByPriceBetween(Integer min, Integer max){
+    public List<Book> getBooksByPriceBetween(Integer min, Integer max) {
         return bookRepository.findBooksByPriceOldBetween(min, max);
     }
 
-    public List<Book> getBooksWithPrice(Integer price){
+    public List<Book> getBooksWithPrice(Integer price) {
         return bookRepository.findBooksByPriceOldIs(price);
     }
 
-    public List<Book> getBestsellers(){
+    public List<Book> getBestsellers() {
         return bookRepository.getBestsellers();
     }
 
-    public List<Book> getBooksWithMaxDiscount(){
+    public List<Book> getBooksWithMaxDiscount() {
         return bookRepository.getBooksWithMaxDiscount();
     }
 }
