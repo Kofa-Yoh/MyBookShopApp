@@ -50,7 +50,11 @@
             <h1 class="Section-title">Популярное
             </h1>
           </div>
-          <div class="Cards Cards_refresh" th:replace="~{fragments/card_fragment :: cardFragment(category='popular',query='')}"></div>
+          <div class="Cards Cards_refresh"
+               th:replace="~{fragments/card_fragment :: cardsBlock(booksList=${booksList},
+                                                                   refreshshow='popular',
+                                                                   refreshoffset=0,
+                                                                   refreshlimit=20)}"></div>
         </div>
       </main>
     </div>

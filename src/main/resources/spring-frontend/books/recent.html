@@ -68,7 +68,11 @@
               </div>
             </form>
           </div>
-          <div class="Cards Cards_refresh" th:replace="~{fragments/card_fragment :: cardFragment(category='recent',query='')}"></div>
+          <div class="Cards Cards_refresh"
+               th:replace="~{fragments/card_fragment :: cardsBlock(booksList=${booksList},
+                                                                   refreshshow='recent',
+                                                                   refreshoffset=0,
+                                                                   refreshlimit=20)}"></div>
         </div>
       </main>
     </div>

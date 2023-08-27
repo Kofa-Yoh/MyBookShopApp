@@ -52,7 +52,12 @@
             <div class="Section-header-links"><a class="Section-header-link" th:href="@{/#tags}" href="/index.html#tags">Все тэги</a>
             </div>
           </div>
-          <div class="Cards Cards_refresh" th:replace="~{fragments/card_fragment :: cardFragment(category='tag',query='',refreshid=${tag})}"></div>
+          <div class="Cards Cards_refresh"
+               th:replace="~{fragments/card_fragment :: cardsBlock(booksList=${booksList},
+                                                                   refreshshow='tag',
+                                                                   refreshid=${tag},
+                                                                   refreshoffset=0,
+                                                                   refreshlimit=20)}"></div>
         </div>
       </main>
     </div>

@@ -6,15 +6,19 @@
 </head>
 <body>
 <!-- Books full page -->
-<div class="Cards Cards_refresh" th:fragment="cardFragment">
+<div th:fragment="cardsBlock" class="Cards Cards_refresh" th:classappend="${classAppend}">
     <th:block th:each="book : ${booksList}" th:insert="~{fragments/card_fragment :: card(book=${book})}"></th:block>
     <div class="Cards-footer Cards-footer_center">
-        <a class="btn btn_primary" href="#" th:attr="data-refreshshow=${category}, data-refreshquery=${query}, data-refreshid=${refreshid}" data-refreshshow="recent"
-           data-refreshoffset="0" data-refreshlimit="20">Показать еще</a>
+        <a class="btn btn_primary" href="#"
+           th:attr="data-refreshshow=${refreshshow}, data-refreshquery=${refreshquery}, data-refreshid=${refreshid},
+                    data-refreshoffset=${refreshoffset}, data-refreshlimit=${refreshlimit}"
+           data-refreshshow="recent"
+           data-refreshoffset="0"
+           data-refreshlimit="20">Показать еще</a>
     </div>
 </div>
 <!-- Books slider -->
-<div class="Slider Slider_carousel" th:fragment="cardsSlider">
+<div th:fragment="cardsSlider" class="Slider Slider_carousel">
     <div class="Slider-box Cards" th:attr="data-load=${load}, data-loadoffset=${loadoffset}, data-loadlimit=${loadlimit}">
         <div class="Slider-item" th:each="book : ${booksList}">
             <div class="Slider-content">
@@ -32,7 +36,7 @@
     </div>
 </div>
 <!-- One book card -->
-<div class="Card" th:fragment="card">
+<div th:fragment="card" class="Card">
         <div class="Card-picture"><a th:href="@{'/books/' + ${book.slug}}" href="#">
             <img th:src="${book.image}" src="/assets/img/content/main/card.jpg" alt="card.jpg"/></a>
             <div th:if="${book.price} > 0" class="Card-sale"
