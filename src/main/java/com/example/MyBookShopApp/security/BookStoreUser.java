@@ -15,15 +15,6 @@ public class BookStoreUser {
     private String phone;
     private String password;
 
-    @Override
-    public String toString() {
-        return "BookStoreUser{" +
-                "name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                '}';
-    }
-
     public Integer getId() {
         return id;
     }

@@ -1,17 +1,12 @@
 package com.example.MyBookShopApp.security;
 
+import com.example.MyBookShopApp.data.SearchWordDto;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class AuthUserController {
@@ -21,6 +16,16 @@ public class AuthUserController {
     @Autowired
     public AuthUserController(BookStoreUserRegister userRegister) {
         this.userRegister = userRegister;
+    }
+
+    @ModelAttribute("curUsr")
+    public Object getCurrentUser() {
+        return null;
+    }
+
+    @ModelAttribute("searchWordDto")
+    public SearchWordDto searchWordDto() {
+        return new SearchWordDto();
     }
 
     @GetMapping("/signin")
@@ -38,7 +43,7 @@ public class AuthUserController {
     @ResponseBody
     public ContactConfirmationResponse handleRequestContactConfirmation(@RequestBody ContactConfirmationPayload payload) {
         ContactConfirmationResponse response = new ContactConfirmationResponse();
-        response.setResult(true);
+        response.setResult("true");
         return response;
     }
 
@@ -46,7 +51,7 @@ public class AuthUserController {
     @ResponseBody
     public ContactConfirmationResponse handleApproveContact(@RequestBody ContactConfirmationPayload payload) {
         ContactConfirmationResponse response = new ContactConfirmationResponse();
-        response.setResult(true);
+        response.setResult("true");
         return response;
     }
 
@@ -59,12 +64,18 @@ public class AuthUserController {
 
     @PostMapping("/login")
     @ResponseBody
-    public ContactConfirmationResponse handleLogin(@RequestBody ContactConfirmationPayload payload) {
-        return userRegister.login(payload);
+    public ContactConfirmationResponse handleLogin(@RequestBody ContactConfirmationPayload payload,
+                                                   HttpServletResponse httpServletResponse) {
+//        ContactConfirmationResponse response = userRegister.login(payload);
+        ContactConfirmationResponse loginResponse = userRegister.jwtLogin(payload);
+        Cookie cookie = new Cookie("token", loginResponse.getResult());
+        httpServletResponse.addCookie(cookie);
+        return loginResponse;
     }
 
     @GetMapping("/my")
-    public String handleMy() {
+    public String handleMy(Model model) {
+        model.addAttribute("curUsr", userRegister.getCurrentUser());
         return "my";
     }
 
@@ -74,8 +85,9 @@ public class AuthUserController {
         return "profile";
     }
 
-    @GetMapping("/logout")
+    /*@GetMapping("/logout")
     public String handleLogout(HttpServletRequest request) {
+        System.out.println("logout");
         HttpSession session = request.getSession();
         SecurityContextHolder.clearContext();
         if (session != null) {
@@ -84,6 +96,6 @@ public class AuthUserController {
         for (Cookie cookie : request.getCookies()) {
             cookie.setMaxAge(0);
         }
-        return "redirect:/";
-    }
+        return "redirect:/signin";
+    }*/
 }

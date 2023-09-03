@@ -1,5 +1,6 @@
 package com.example.MyBookShopApp.security;
 
+import com.example.MyBookShopApp.security.jwt.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,14 +15,21 @@ import org.springframework.stereotype.Service;
 public class BookStoreUserRegister {
 
     private final BookStoreUserRepository bookStoreUserRepository;
+    private final BookStoreUserDetailService bookStoreUserDetailService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final JWTUtil jwtUtil;
 
     @Autowired
-    public BookStoreUserRegister(BookStoreUserRepository bookStoreUserRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+    public BookStoreUserRegister(BookStoreUserRepository bookStoreUserRepository,
+                                 PasswordEncoder passwordEncoder,
+                                 AuthenticationManager authenticationManager,
+                                 BookStoreUserDetailService bookStoreUserDetailService, JWTUtil jwtUtil) {
         this.bookStoreUserRepository = bookStoreUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
+        this.bookStoreUserDetailService = bookStoreUserDetailService;
+        this.jwtUtil = jwtUtil;
     }
 
     public void registerNewUser(RegistrationForm registrationForm) {
@@ -36,15 +44,29 @@ public class BookStoreUserRegister {
     }
 
     public ContactConfirmationResponse login(ContactConfirmationPayload payload) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(payload.getContact(),
-                payload.getCode()));
+        BookStoreUserDetails userDetails = (BookStoreUserDetails) bookStoreUserDetailService.loadUserByUsername(payload.getContact());
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+                userDetails,
+                payload.getCode(),
+                userDetails.getAuthorities());
+        Authentication authentication = authenticationManager.authenticate(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         ContactConfirmationResponse response = new ContactConfirmationResponse();
-        response.setResult(true);
+        response.setResult("true");
         return response;
     }
 
-    public Object getCurrentUser() throws UsernameNotFoundException{
+    public ContactConfirmationResponse jwtLogin(ContactConfirmationPayload payload) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(payload.getContact(),
+                payload.getCode()));
+        BookStoreUserDetails userDetails = (BookStoreUserDetails) bookStoreUserDetailService.loadUserByUsername(payload.getContact());
+        String jwtToken = jwtUtil.generateToken(userDetails);
+        ContactConfirmationResponse response = new ContactConfirmationResponse();
+        response.setResult(jwtToken);
+        return response;
+    }
+
+    public Object getCurrentUser() throws UsernameNotFoundException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             BookStoreUserDetails userDetails =
