@@ -33,13 +33,21 @@ public class BookStoreUserRegister {
     }
 
     public void registerNewUser(RegistrationForm registrationForm) {
-        if (bookStoreUserRepository.findBookStoreUserByEmail(registrationForm.getEmail()) == null) {
+        BookStoreUser bookStoreUserByEmail = bookStoreUserRepository.findBookStoreUserByEmail(registrationForm.getEmail());
+        if (bookStoreUserByEmail == null) {
             BookStoreUser user = new BookStoreUser();
             user.setName(registrationForm.getName());
             user.setEmail(registrationForm.getEmail());
             user.setPhone(registrationForm.getPhone());
             user.setPassword(passwordEncoder.encode(registrationForm.getPass()));
+            user.setAuthType(AuthenticationType.DATABASE);
             bookStoreUserRepository.save(user);
+        } else if (bookStoreUserByEmail.getAuthType() != AuthenticationType.DATABASE) {
+            bookStoreUserByEmail.setName(registrationForm.getName());
+            bookStoreUserByEmail.setPhone(registrationForm.getPhone());
+            bookStoreUserByEmail.setPassword(passwordEncoder.encode(registrationForm.getPass()));
+            bookStoreUserByEmail.setAuthType(AuthenticationType.DATABASE);
+            bookStoreUserRepository.save(bookStoreUserByEmail);
         }
     }
 

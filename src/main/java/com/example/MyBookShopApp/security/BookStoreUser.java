@@ -15,6 +15,10 @@ public class BookStoreUser {
     private String phone;
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_type")
+    private AuthenticationType authType;
+
     public Integer getId() {
         return id;
     }
@@ -53,5 +57,13 @@ public class BookStoreUser {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public AuthenticationType getAuthType() {
+        return authType;
+    }
+
+    public void setAuthType(AuthenticationType authType) {
+        this.authType = authType;
     }
 }
