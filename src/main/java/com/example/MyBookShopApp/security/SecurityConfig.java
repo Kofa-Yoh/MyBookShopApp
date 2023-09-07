@@ -90,10 +90,7 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/my")
                         .successHandler(oAuthLoginSuccessHandler)
                         .failureHandler(authenticationFailureHandler()))
-                .oauth2Client(withDefaults())
-                .logout(form -> form
-                        .logoutSuccessUrl("/signin")
-                        .deleteCookies("token"));
+                .oauth2Client(withDefaults());
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterAfter(filter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(accessFilter(), BasicAuthenticationFilter.class);
