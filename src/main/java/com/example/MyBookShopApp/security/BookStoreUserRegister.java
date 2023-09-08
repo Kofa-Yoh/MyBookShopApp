@@ -1,5 +1,7 @@
 package com.example.MyBookShopApp.security;
 
+import com.example.MyBookShopApp.data.MappingUtils;
+import com.example.MyBookShopApp.data.UserDto;
 import com.example.MyBookShopApp.security.jwt.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -74,14 +76,16 @@ public class BookStoreUserRegister {
         return response;
     }
 
-    public Object getCurrentUser() throws UsernameNotFoundException {
+    public UserDto getCurrentUser() throws UsernameNotFoundException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             BookStoreUserDetails userDetails =
                     (BookStoreUserDetails) authentication.getPrincipal();
-            return userDetails;
+            UserDto userDto = MappingUtils.mapToUserDto(userDetails);
+            return userDto;
         } else {
-            throw new UsernameNotFoundException("user not found");
+            UserDto userDto = new UserDto();
+            return userDto;
         }
     }
 }

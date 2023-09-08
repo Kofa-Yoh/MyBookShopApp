@@ -35,11 +35,6 @@ public class AuthUserController {
         this.tokenBlacklistService = tokenBlacklistService;
     }
 
-    @ModelAttribute("curUsr")
-    public Object getCurrentUser() {
-        return null;
-    }
-
     @ModelAttribute("searchWordDto")
     public SearchWordDto searchWordDto() {
         return new SearchWordDto();

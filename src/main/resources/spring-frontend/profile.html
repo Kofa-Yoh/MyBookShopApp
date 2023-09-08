@@ -68,12 +68,12 @@
                       <div class="form-group">
                         <label class="form-label" for="name">Имя
                         </label>
-                        <input class="form-input" id="name" name="name" type="text" th:value="${curUsr?.bookStoreUser.name}" value="Михаил"/>
+                        <input class="form-input" id="name" name="name" type="text" th:value="${curUsr?.name}" value="Михаил"/>
                       </div>
                       <div class="form-group">
                         <label class="form-label" for="mail">E-mail
                         </label>
-                        <input class="form-input" id="mail" name="mail" type="text" th:value="${curUsr?.bookStoreUser.email}" value="addr@sait.com" data-validate="require mail"/>
+                        <input class="form-input" id="mail" name="mail" type="text" th:value="${curUsr?.email}" value="addr@sait.com" data-validate="require mail"/>
                         <div class="Profile-btn Profile-btn_confirm">
                           <button class="btn btn_primary" type="button">Подтвердить
                           </button>
@@ -82,7 +82,7 @@
                       <div class="form-group">
                         <label class="form-label" for="phone">Телефон
                         </label>
-                        <input class="form-input" id="phone" name="phone" type="text" th:value="${curUsr?.bookStoreUser.phone}" value="+70000000000" data-mask="+7 (999) 999-99-99" data-validate="require"/>
+                        <input class="form-input" id="phone" name="phone" type="text" th:value="${curUsr?.phone}" value="+70000000000" data-mask="+7 (999) 999-99-99" data-validate="require"/>
                         <div class="Profile-btn Profile-btn_confirm">
                           <button class="btn btn_primary" type="button">Подтвердить
                           </button>
