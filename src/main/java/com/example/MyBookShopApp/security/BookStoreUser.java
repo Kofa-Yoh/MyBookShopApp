@@ -1,5 +1,6 @@
 package com.example.MyBookShopApp.security;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 
@@ -13,6 +14,7 @@ public class BookStoreUser {
     private String name;
     private String email;
     private String phone;
+    @JsonIgnore
     private String password;
 
     @Enumerated(EnumType.STRING)
