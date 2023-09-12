@@ -1,7 +1,11 @@
 package com.example.MyBookShopApp.security;
 
+import com.example.MyBookShopApp.data.Book2User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -20,6 +24,10 @@ public class BookStoreUser {
     @Enumerated(EnumType.STRING)
     @Column(name = "auth_type")
     private AuthenticationType authType;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Book2User> book2users = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -67,5 +75,13 @@ public class BookStoreUser {
 
     public void setAuthType(AuthenticationType authType) {
         this.authType = authType;
+    }
+
+    public List<Book2User> getBook2users() {
+        return book2users;
+    }
+
+    public void setBook2users(List<Book2User> book2users) {
+        this.book2users = book2users;
     }
 }

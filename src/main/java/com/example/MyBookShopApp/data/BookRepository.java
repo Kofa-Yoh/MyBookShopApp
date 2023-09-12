@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -49,5 +50,5 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 
     Book findBookBySlug(String slug);
 
-    List<Book> findBooksBySlugIn(String[] slugs);
+    List<Book> findBooksBySlugIn(ArrayList<String> slugs);
 }

@@ -35,6 +35,97 @@
         </div>
     </div>
 </div>
+<!-- Books product list -->
+<th:block th:fragment="cardsProductList">
+    <div class="Cart-product" th:each="book : ${bookList}">
+        <div class="Cart-block Cart-block_row">
+            <div class="Cart-block Cart-block_pict">
+                <a class="Cart-pict" href="#">
+                    <img class="Cart-img" th:src="${book.image}" src="/assets/img/content/main/card.jpg" alt="card.jpg"/>
+                </a>
+            </div>
+            <div class="Cart-block Cart-block_row">
+                <div class="Cart-block Cart-block_info">
+                    <div class="Cart-author"><a href="#" th:text="${book.getBookAuthors()}">Борис Васильевич Бедный</a>
+                    </div>
+                    <div class="Cart-title"><a href="#" th:text="${book.title}">Жизнь</a>
+                    </div>
+                    <div class="Cart-rating"><span class="Rating"><span class="Rating-stars"><span class="Rating-star Rating-star_view">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
+                                <g>
+                                  <g>
+                                    <path fill="#ffc000" d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z"></path>
+                                  </g>
+                                </g>
+                              </svg></span><span class="Rating-star Rating-star_view">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
+                                <g>
+                                  <g>
+                                    <path fill="#ffc000" d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z"></path>
+                                  </g>
+                                </g>
+                              </svg></span><span class="Rating-star Rating-star_view">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
+                                <g>
+                                  <g>
+                                    <path fill="#ffc000" d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z"></path>
+                                  </g>
+                                </g>
+                              </svg></span><span class="Rating-star Rating-star_view">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
+                                <g>
+                                  <g>
+                                    <path fill="#ffc000" d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z"></path>
+                                  </g>
+                                </g>
+                              </svg></span><span class="Rating-star">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
+                                <g>
+                                  <g>
+                                    <path fill="#ffc000" d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z"></path>
+                                  </g>
+                                </g>
+                              </svg></span></span></span>
+                    </div>
+                    <div class="Cart-buttons">
+                        <div class="Cart-btn">
+                            <button th:if="${page == 'cart'}" class="btn btn_primary btn_outline"
+                                    data-sendstatus="KEPT" th:attr="data-bookid = ${book.slug}"
+                                    data-bookid="[1111]">
+                                <span class="btn-icon"><img src="/assets/img/icons/heart.svg" alt="heart.svg"/></span>
+                                <span class="btn-content">Отложить</span>
+                            </button>
+                            <button th:if="${page == 'postponed'}" class="btn btn_primary btn_outline"
+                                    data-sendstatus="CART" th:attr="data-bookid = ${book.slug}"
+                                    data-bookid="[1111]">
+                                <span class="btn-icon"><img src="/assets/img/icons/shopping-basket.svg" alt="shopping-basket.svg"/></span>
+                                <span class="btn-content">Купить</span>
+                            </button>
+                        </div>
+                        <div class="Cart-btn">
+                            <button class="btn btn_danger btn_outline"
+                                    data-sendstatus="UNLINK" th:attr="data-bookid = ${book.slug}"
+                                    data-bookid="[1111]">
+                                <span class="btn-icon"><img src="/assets/img/icons/trash.svg" alt="trash.svg"/></span>
+                                <span class="btn-content">Удалить</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="Cart-block Cart-block_price">
+                    <div class="Cart-priceTitle">Цена:
+                    </div>
+                    <div class="Cart-price Cart-price_old" th:text="${book.price > 0 ? book.priceOld + ' р.' : ''}">254 р.
+                    </div>
+                    <div class="Cart-price" th:text="${book.getPriceWithDiscount() + ' р.'}">180 р.
+                    </div>
+                    <div class="Cart-sale" th:if="${book.price > 0}" th:text="${'-' + book.getDiscountPercent() + '%'}">-30%
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
 <!-- One book card -->
 <div th:fragment="card" class="Card">
         <div class="Card-picture"><a th:href="@{'/books/' + ${book.slug}}" href="#">

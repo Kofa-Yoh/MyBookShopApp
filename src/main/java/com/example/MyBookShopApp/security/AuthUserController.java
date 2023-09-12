@@ -87,13 +87,14 @@ public class AuthUserController {
 
     @GetMapping("/my")
     public String handleMy(Model model) {
-        model.addAttribute("curUsr", userRegister.getCurrentUser());
+        model.addAttribute("curUsr", userRegister.getCurrentUserDto());
+
         return "my";
     }
 
     @GetMapping("/profile")
     public String handleProfile(Model model) {
-        model.addAttribute("curUsr", userRegister.getCurrentUser());
+        model.addAttribute("curUsr", userRegister.getCurrentUserDto());
         return "profile";
     }
 
