@@ -18,6 +18,6 @@ public class CurrentUserController {
 
     @ModelAttribute("curUsr")
     public UserDto getCurrentUser() {
-        return bookStoreUserRegister.getCurrentUser();
+        return bookStoreUserRegister.getCurrentUserDto();
     }
 }

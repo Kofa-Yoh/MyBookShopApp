@@ -76,7 +76,7 @@ public class BookStoreUserRegister {
         return response;
     }
 
-    public UserDto getCurrentUser() throws UsernameNotFoundException {
+    public UserDto getCurrentUserDto() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             BookStoreUserDetails userDetails =
@@ -86,6 +86,15 @@ public class BookStoreUserRegister {
         } else {
             UserDto userDto = new UserDto();
             return userDto;
+        }
+    }
+
+    public BookStoreUserDetails getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            return (BookStoreUserDetails) authentication.getPrincipal();
+        } else {
+            return null;
         }
     }
 }

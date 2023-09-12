@@ -363,14 +363,19 @@
                 <!--+div.-cartElement.-cartElement_amount-->
                 <!--    +Amount._product-->
                 <div class="ProductCard-cartElement">
-                  <button class="btn btn_primary btn_outline" data-sendstatus="KEPT" data-bookid="[1111]" data-btntype="check" data-btnradio="buyblock" data-check="false" data-alttext="Отложена"><span class="btn-icon"><img src="/assets/img/icons/heart.svg" alt="heart.svg"/></span><span class="btn-content">Отложить</span>
+                  <button class="btn btn_primary btn_outline"
+                          th:attr="data-bookid = ${slugBook?.slug}"
+                          data-sendstatus="KEPT" data-bookid="[1111]" data-btntype="check"
+                          data-btnradio="buyblock" data-check="false" data-alttext="Отложена">
+                    <span class="btn-icon"><img src="/assets/img/icons/heart.svg" alt="heart.svg"/></span>
+                    <span class="btn-content">Отложить</span>
                   </button>
                 </div>
                 <div class="ProductCard-cartElement">
                   <button class="btn btn_primary btn_outline"
                           th:attr="data-bookid = ${slugBook?.slug}"
-                          data-sendstatus="CART" data-bookid="[1111]" data-btntype="check" data-btnradio="buyblock"
-                          data-check="false" data-alttext="В корзине">
+                          data-sendstatus="CART" data-bookid="[1111]" data-btntype="check"
+                          data-btnradio="buyblock" data-check="false" data-alttext="В корзине">
                     <span class="btn-icon"><img src="/assets/img/icons/shopping-basket.svg" alt="shopping-basket.svg"/></span>
                     <span class="btn-content">Купить</span>
                   </button>

@@ -79,6 +79,10 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private Set<Genre> genres;
 
+    @OneToMany(mappedBy = "book")
+    @JsonIgnore
+    private List<Book2User> book2users = new ArrayList<>();
+
     @JsonProperty(value = "discountPercent")
     public Integer getDiscountPercent(){
         return (int) Math.floor(price * 100);
@@ -225,5 +229,13 @@ public class Book {
 
     public void setGenres(Set<Genre> genres) {
         this.genres = genres;
+    }
+
+    public List<Book2User> getBook2users() {
+        return book2users;
+    }
+
+    public void setBook2users(List<Book2User> book2users) {
+        this.book2users = book2users;
     }
 }
