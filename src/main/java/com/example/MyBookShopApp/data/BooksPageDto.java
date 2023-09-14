@@ -6,9 +6,9 @@ public class BooksPageDto {
 
     private Integer count;
 
-    private List<Book> books;
+    private List<BookDto> books;
 
-    public BooksPageDto(List<Book> books) {
+    public BooksPageDto(List<BookDto> books) {
         this.books = books;
         this.count = books.size();
     }
@@ -21,11 +21,11 @@ public class BooksPageDto {
         this.count = count;
     }
 
-    public List<Book> getBooks() {
+    public List<BookDto> getBooks() {
         return books;
     }
 
-    public void setBooks(List<Book> books) {
+    public void setBooks(List<BookDto> books) {
         this.books = books;
     }
 }

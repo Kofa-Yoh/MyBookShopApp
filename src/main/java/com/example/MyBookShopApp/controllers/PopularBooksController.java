@@ -23,8 +23,8 @@ public class PopularBooksController {
     }
 
     @ModelAttribute("booksList")
-    public List<Book> booksList() {
-        return new ArrayList<Book>();
+    public List<BookDto> booksList() {
+        return new ArrayList<BookDto>();
     }
 
     @ModelAttribute("searchWordDto")

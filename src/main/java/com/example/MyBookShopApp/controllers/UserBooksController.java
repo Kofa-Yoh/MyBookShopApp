@@ -1,9 +1,6 @@
 package com.example.MyBookShopApp.controllers;
 
-import com.example.MyBookShopApp.data.Book;
-import com.example.MyBookShopApp.data.Book2UserService;
-import com.example.MyBookShopApp.data.Book2UserTypeDto;
-import com.example.MyBookShopApp.data.BookRepository;
+import com.example.MyBookShopApp.data.*;
 import com.example.MyBookShopApp.security.BookStoreUserDetails;
 import com.example.MyBookShopApp.security.BookStoreUserRegister;
 import jakarta.servlet.http.Cookie;
@@ -38,7 +35,7 @@ public class UserBooksController {
                                     HttpServletResponse response,
                                     Model model) {
 
-        List<Book> booksList = getUserBooksList("cart", cartContents);
+        List<BookDto> booksList = getUserBooksList("cart", cartContents);
 
         String booksInCookie = null;
         if (booksList.size() > 0) {
@@ -54,10 +51,10 @@ public class UserBooksController {
 
         model.addAttribute("booksList", booksList);
         model.addAttribute("fullPriceOld", booksList.stream()
-                .mapToInt(book -> book.getPriceOld())
+                .mapToInt(book -> book.getPrice())
                 .sum());
         model.addAttribute("fullPrice", booksList.stream()
-                .mapToInt(book -> book.getPriceWithDiscount())
+                .mapToInt(book -> book.getDiscountPrice())
                 .sum());
         model.addAttribute("isCartEmpty", booksList.size() == 0);
 
@@ -69,7 +66,7 @@ public class UserBooksController {
                                      HttpServletResponse response,
                                      Model model) {
 
-        List<Book> booksList = getUserBooksList("postponed", postponedContents);
+        List<BookDto> booksList = getUserBooksList("postponed", postponedContents);
 
         String booksInCookie = null;
         if (booksList.size() > 0) {
@@ -92,16 +89,16 @@ public class UserBooksController {
         return "postponed";
     }
 
-    private String getNewCookieContent(List<Book> booksList) {
+    private String getNewCookieContent(List<BookDto> booksList) {
         return booksList.stream()
                 .map(book -> book.getSlug())
                 .collect(Collectors.joining("/"));
     }
 
-    private List<Book> getUserBooksList(String page,
-                                        String cookieContents) {
+    private List<BookDto> getUserBooksList(String page,
+                                           String cookieContents) {
 
-        List<Book> booksList = new ArrayList<>();
+        List<BookDto> booksList = new ArrayList<>();
 
         BookStoreUserDetails currentUser = bookStoreUserRegister.getCurrentUser();
 
@@ -117,14 +114,16 @@ public class UserBooksController {
         return booksList;
     }
 
-    private List<Book> getUserBooksFromCookie(String cookieContents) {
+    private List<BookDto> getUserBooksFromCookie(String cookieContents) {
         if (cookieContents == null || cookieContents.equals("")) {
             return new ArrayList<>();
         } else {
             cookieContents = cookieContents.startsWith("/") ? cookieContents.substring(1) : cookieContents;
             cookieContents = cookieContents.endsWith("/") ? cookieContents.substring(0, cookieContents.length() - 1) : cookieContents;
             ArrayList<String> cookieSlugs = new ArrayList<>(Arrays.asList(cookieContents.split("/")));
-            return new ArrayList<>(bookRepository.findBooksBySlugIn(cookieSlugs));
+            return new ArrayList<>(bookRepository.findBooksBySlugIn(cookieSlugs).stream()
+                    .map(MappingUtils::mapToBookDto)
+                    .collect(Collectors.toList()));
         }
     }
 }

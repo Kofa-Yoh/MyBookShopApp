@@ -41,7 +41,7 @@ public class AuthorsController {
     }
 
     @ModelAttribute("booksList")
-    public List<Book> booksList(){
+    public List<BookDto> booksList(){
         return new ArrayList<>();
     }
 

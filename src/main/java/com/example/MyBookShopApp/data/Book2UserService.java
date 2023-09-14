@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 public class Book2UserService {
@@ -20,12 +21,13 @@ public class Book2UserService {
         this.book2UserTypeRepository = book2UserTypeRepository;
     }
 
-    public List<Book> getBooksByUserAndLinkType(BookStoreUser user, Book2UserTypeDto linkType) {
+    public List<BookDto> getBooksByUserAndLinkType(BookStoreUser user, Book2UserTypeDto linkType) {
         if (user != null) {
             return book2UserRepository.findBook2UsersByUserAndLinkType_Code(user, linkType)
                     .stream()
                     .map(Book2User::getBook)
-                    .toList();
+                    .map(MappingUtils::mapToBookDto)
+                    .collect(Collectors.toList());
         } else {
             return new ArrayList<>();
         }

@@ -23,17 +23,17 @@ public class MainPageController {
     }
 
     @ModelAttribute("recommendedBooks")
-    public List<Book> recommendedBooks(){
+    public List<BookDto> recommendedBooks(){
         return bookService.getPageOfRecommendedBooks(0, 6).getContent();
     }
 
     @ModelAttribute("recentBooks")
-    public List<Book> recentBooks(){
+    public List<BookDto> recentBooks(){
         return bookService.getPageOfRecentBooks(0, 6).getContent();
     }
 
     @ModelAttribute("popularBooks")
-    public List<Book> popularBooks(){
+    public List<BookDto> popularBooks(){
         return bookService.getPageOfPopularBooks(0, 6).getContent();
     }
 
@@ -43,7 +43,7 @@ public class MainPageController {
     }
 
     @ModelAttribute("searchResults")
-    public List<Book> searchResults(){
+    public List<BookDto> searchResults(){
         return new ArrayList<>();
     }
 

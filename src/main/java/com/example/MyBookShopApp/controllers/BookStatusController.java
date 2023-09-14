@@ -131,7 +131,7 @@ public class BookStatusController {
         return result;
     }
 
-    private String getNewCookieContent(List<Book> booksList) {
+    private String getNewCookieContent(List<BookDto> booksList) {
         return booksList.stream()
                 .map(book -> book.getSlug())
                 .collect(Collectors.joining("/"));

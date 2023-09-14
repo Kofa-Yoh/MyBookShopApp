@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -20,63 +21,83 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    public List<Book> getBooksData() {
-        return bookRepository.findAll();
+    public List<BookDto> getBooksData() {
+        return bookRepository.findAll()
+                .stream()
+                .map(MappingUtils::mapToBookDto)
+                .toList();
     }
 
-    public Page<Book> getPageOfRecommendedBooks(Integer offset, Integer limit) {
+    public Page<BookDto> getPageOfRecommendedBooks(Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
-        return bookRepository.findAll(nextPage);
+        return bookRepository.findAll(nextPage)
+                .map(MappingUtils::mapToBookDto);
     }
 
-    public Page<Book> getPageOfRecentBooks(Integer offset, Integer limit) {
+    public Page<BookDto> getPageOfRecentBooks(Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
-        return bookRepository.findAllByOrderByPubDateDesc(nextPage);
+        return bookRepository.findAllByOrderByPubDateDesc(nextPage)
+                .map(MappingUtils::mapToBookDto);
     }
 
-    public Page<Book> getPageOfRecentBooksByPubDateBetween(Date begin, Date end, Integer offset, Integer limit) {
+    public Page<BookDto> getPageOfRecentBooksByPubDateBetween(Date begin, Date end, Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
-        return bookRepository.findByPubDateBetween(begin, end, nextPage);
+        return bookRepository.findByPubDateBetween(begin, end, nextPage)
+                .map(MappingUtils::mapToBookDto);
     }
 
-    public Page<Book> getPageOfPopularBooks(Integer offset, Integer limit) {
+    public Page<BookDto> getPageOfPopularBooks(Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
-        return bookRepository.getPopularBooks(nextPage);
+        return bookRepository.getPopularBooks(nextPage)
+                .map(MappingUtils::mapToBookDto);
     }
 
-    public Page<Book> getPageOfBooksByAuthorSlug(String authorSlug, Integer offset, Integer limit) {
+    public Page<BookDto> getPageOfBooksByAuthorSlug(String authorSlug, Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
-        return bookRepository.findBooksByBook2Authors_Author_Slug(authorSlug, nextPage);
+        return bookRepository.findBooksByBook2Authors_Author_Slug(authorSlug, nextPage)
+                .map(MappingUtils::mapToBookDto);
     }
 
-    public Page<Book> getPageOfSearchResultBooks(String searchWord, Integer offset, Integer limit) {
+    public Page<BookDto> getPageOfSearchResultBooks(String searchWord, Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
-        return bookRepository.findBookByTitleContaining(searchWord, nextPage);
+        return bookRepository.findBookByTitleContaining(searchWord, nextPage)
+                .map(MappingUtils::mapToBookDto);
     }
 
-    public Page<Book> getPageOfSearchTagResultBooks(String tag, Integer offset, Integer limit) {
+    public Page<BookDto> getPageOfSearchTagResultBooks(String tag, Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
-        return bookRepository.findBookByTags_Name(tag, nextPage);
+        return bookRepository.findBookByTags_Name(tag, nextPage)
+                .map(MappingUtils::mapToBookDto);
     }
 
-    public Page<Book> getPageOfSearchGenreResultBooks(String genre, Integer offset, Integer limit) {
+    public Page<BookDto> getPageOfSearchGenreResultBooks(String genre, Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
-        return bookRepository.findBookByGenres_Name(genre, nextPage);
+        return bookRepository.findBookByGenres_Name(genre, nextPage)
+                .map(MappingUtils::mapToBookDto);
     }
 
-    public List<Book> getBooksByAuthorName(String authorName) {
-        return bookRepository.findBooksByBook2Authors_Author_NameContaining(authorName);
+    public List<BookDto> getBooksByAuthorName(String authorName) {
+        return bookRepository.findBooksByBook2Authors_Author_NameContaining(authorName)
+                .stream()
+                .map(MappingUtils::mapToBookDto)
+                .toList();
     }
 
-    public List<Book> getBooksByAuthorSlug(String authorSlug) {
-        return bookRepository.findBooksByBook2Authors_Author_Slug(authorSlug);
+    public List<BookDto> getBooksByAuthorSlug(String authorSlug) {
+        return bookRepository.findBooksByBook2Authors_Author_Slug(authorSlug)
+                .stream()
+                .map(MappingUtils::mapToBookDto)
+                .collect(Collectors.toList());
     }
 
-    public List<Book> getBooksByTitle(String title) throws BookstoreApiWrongParameterException {
+    public List<BookDto> getBooksByTitle(String title) throws BookstoreApiWrongParameterException {
         if (title.equals("") || title.length() <= 1) {
             throw new BookstoreApiWrongParameterException("Wrong values passed to one or more parameters");
         } else {
-            List<Book> data = bookRepository.findBooksByTitleContaining(title);
+            List<BookDto> data = bookRepository.findBooksByTitleContaining(title)
+                    .stream()
+                    .map(MappingUtils::mapToBookDto)
+                    .toList();
             if (data.size() > 0) {
                 return data;
             } else {
@@ -85,19 +106,31 @@ public class BookService {
         }
     }
 
-    public List<Book> getBooksByPriceBetween(Integer min, Integer max) {
-        return bookRepository.findBooksByPriceOldBetween(min, max);
+    public List<BookDto> getBooksByPriceBetween(Integer min, Integer max) {
+        return bookRepository.findBooksByPriceOldBetween(min, max)
+                .stream()
+                .map(MappingUtils::mapToBookDto)
+                .toList();
     }
 
-    public List<Book> getBooksWithPrice(Integer price) {
-        return bookRepository.findBooksByPriceOldIs(price);
+    public List<BookDto> getBooksWithPrice(Integer price) {
+        return bookRepository.findBooksByPriceOldIs(price)
+                .stream()
+                .map(MappingUtils::mapToBookDto)
+                .toList();
     }
 
-    public List<Book> getBestsellers() {
-        return bookRepository.getBestsellers();
+    public List<BookDto> getBestsellers() {
+        return bookRepository.getBestsellers()
+                .stream()
+                .map(MappingUtils::mapToBookDto)
+                .toList();
     }
 
-    public List<Book> getBooksWithMaxDiscount() {
-        return bookRepository.getBooksWithMaxDiscount();
+    public List<BookDto> getBooksWithMaxDiscount() {
+        return bookRepository.getBooksWithMaxDiscount()
+                .stream()
+                .map(MappingUtils::mapToBookDto)
+                .toList();
     }
 }
