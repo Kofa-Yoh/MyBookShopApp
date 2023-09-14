@@ -1,5 +1,7 @@
 package com.example.MyBookShopApp.data;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +13,9 @@ public class TagService {
 
     private TagRepository tagRepository;
     private Long maxCountBooksWithTag;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     public TagService(TagRepository tagRepository) {
         this.tagRepository = tagRepository;
@@ -35,5 +40,16 @@ public class TagService {
 
     public String getTagClassByCategory(TagCategoryEnum category) {
         return category == null ? "" : "Tag_" + category.toString().toLowerCase();
+    }
+
+    public TagDto convertToDto(Tag tag) {
+        TagDto tagDto = modelMapper.map(tag, TagDto.class);
+        return tagDto;
+    }
+
+    public List<TagDto> convertTagListToDto(List<Tag> authors) {
+        return authors.stream()
+                .map(this::convertToDto)
+                .toList();
     }
 }
