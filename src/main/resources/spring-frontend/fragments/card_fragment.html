@@ -40,15 +40,17 @@
     <div class="Cart-product" th:each="book : ${bookList}">
         <div class="Cart-block Cart-block_row">
             <div class="Cart-block Cart-block_pict">
-                <a class="Cart-pict" href="#">
+                <a class="Cart-pict" th:href="@{'/books/' + ${book.slug}}" href="#">
                     <img class="Cart-img" th:src="${book.image}" src="/assets/img/content/main/card.jpg" alt="card.jpg"/>
                 </a>
             </div>
             <div class="Cart-block Cart-block_row">
                 <div class="Cart-block Cart-block_info">
-                    <div class="Cart-author"><a href="#" th:text="${book.authors}">Борис Васильевич Бедный</a>
+                    <div class="Cart-author">
+                        <div class="description" th:text="${book.authors}">Борис Васильевич Бедный</div>
                     </div>
-                    <div class="Cart-title"><a href="#" th:text="${book.title}">Жизнь</a>
+                    <div class="Cart-title">
+                        <a th:href="@{'/books/' + ${book.slug}}" href="#" th:text="${book.title}">Жизнь</a>
                     </div>
                     <div class="Cart-rating">
                         <th:block th:replace="~{fragments/bookrating_fragment :: bookrate(i=${book.rating})}"></th:block>
