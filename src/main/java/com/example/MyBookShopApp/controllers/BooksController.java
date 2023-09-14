@@ -16,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Controller
@@ -24,11 +26,15 @@ public class BooksController {
 
     private final BookRepository bookRepository;
     private final ResourceStorage storage;
+    private final AuthorsService authorsService;
+    private final TagService tagService;
 
     @Autowired
     public BooksController(BookRepository bookRepository, ResourceStorage storage) {
         this.bookRepository = bookRepository;
         this.storage = storage;
+        this.authorsService = authorsService;
+        this.tagService = tagService;
     }
 
     @ModelAttribute("searchWordDto")
@@ -39,7 +45,22 @@ public class BooksController {
     @GetMapping("/{slug}")
     public String bookPage(@PathVariable("slug") String slug, Model model){
         Book book = bookRepository.findBookBySlug(slug);
-        model.addAttribute("slugBook", book);
+        BookDto bookDto = MappingUtils.mapToBookDto(book);
+        List<AuthorDto> authorDtos = authorsService.convertAuthorsListToDto(book.getBookAuthorsList());
+        List<TagDto> tagDtos = tagService.convertTagListToDto(book.getTags().stream().toList());
+        List<BookFile> bookFileList = book.getBookFileList();
+        List<BookFileDto> fileDtos = new ArrayList<>();
+        if (bookFileList != null) {
+            fileDtos = bookFileList
+                    .stream()
+                    .map(MappingUtils::mapToBookFileDto)
+                    .toList();
+        }
+        model.addAttribute("slugBook", bookDto);
+        model.addAttribute("slugBookAuthors", authorDtos);
+        model.addAttribute("slugBookTags", tagDtos);
+        model.addAttribute("slugBookFiles", fileDtos);
+
         return "/books/slug";
     }
 
