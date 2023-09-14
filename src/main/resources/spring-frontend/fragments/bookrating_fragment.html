@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<!-- Block with all rates for book  -->
+<!-- parameters: bookRateMap, newAttr -->
+<th:block th:fragment="ratingBlock">
+    <th:block th:each="num : ${#numbers.sequence(5, 1)}">
+        <th:block th:insert="~{fragments/bookrating_fragment :: bookrate(
+                  i=${num},
+                  ratingTitle=${bookRateMap.getOrDefault(num, 0)},
+                  newAttr=${newAttr})}"></th:block><br>
+    </th:block>
+</th:block>
+
+<!-- Book's rating row -->
+<!-- parameters: i (yellow stars count), classappend, ratingTitle, hasInput, newAttr  -->
+<th:block th:fragment="bookrate">
+    <span class="Rating" th:classappend="${classappend}" data-bookid th:attr="data-bookid = ${newAttr != null ? newAttr : ''}">
+        <span class="Rating-stars">
+            <th:block th:if="${i > 0}" th:each="star : ${#numbers.sequence(1, i)}">
+                <th:block th:insert="~{fragments/bookrating_fragment :: star-yellow}"></th:block>
+                <input th:if="${hasInput}" name="rating" type="radio" th:value="${star}" value="1"/>
+            </th:block>
+            <th:block th:if="${i < 5}" th:each="star : ${#numbers.sequence(i + 1, 5)}">
+                <th:block th:insert="~{fragments/bookrating_fragment :: star-grey}"></th:block>
+                <input th:if="${hasInput}" name="rating" type="radio" th:value="${star}" value="1"/>
+            </th:block>
+        </span>
+        <span th:if="${ratingTitle} != null" class="Rating-title" th:text="${ratingTitle}">(567)</span>
+    </span>
+</th:block>
+
+<!-- Yellow star -->
+<!-- parameters: inputVal-->
+<th:block th:fragment="star-yellow">
+    <th:block th:insert="~{fragments/bookrating_fragment :: star-grey(starClassappend = 'Rating-star_view')}"></th:block>
+</th:block>
+
+<!-- Grey star -->
+<!-- parameters: starClassappend -->
+<th:block th:fragment="star-grey">
+    <span class="Rating-star" th:classappend="${starClassappend}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
+          <g>
+            <g>
+              <path fill="#ffc000" d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z"></path>
+            </g>
+          </g>
+        </svg>
+    </span>
+</th:block>
+
+</body>
+</html>

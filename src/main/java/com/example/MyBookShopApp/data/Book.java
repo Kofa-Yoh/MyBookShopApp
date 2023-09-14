@@ -83,6 +83,10 @@ public class Book {
     @JsonIgnore
     private List<Book2User> book2users = new ArrayList<>();
 
+    @OneToMany(mappedBy = "book")
+    @JsonIgnore
+    private List<BookAssessment> bookRate = new ArrayList<>();
+
     @JsonProperty(value = "discountPercent")
     public Integer getDiscountPercent(){
         return (int) Math.floor(price * 100);
@@ -237,5 +241,13 @@ public class Book {
 
     public void setBook2users(List<Book2User> book2users) {
         this.book2users = book2users;
+    }
+
+    public List<BookAssessment> getBookRate() {
+        return bookRate;
+    }
+
+    public void setBookRate(List<BookAssessment> bookRate) {
+        this.bookRate = bookRate;
     }
 }
