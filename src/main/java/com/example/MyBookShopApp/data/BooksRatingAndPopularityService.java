@@ -16,9 +16,10 @@ public class BooksRatingAndPopularityService {
         this.booksRatingAndPopularityRepository = booksRatingAndPopularityRepository;
     }
 
-    public Page<Book> getPopularBooks(Integer offset, Integer limit){
+    public Page<BookDto> getPopularBooks(Integer offset, Integer limit){
         Pageable nextPage = PageRequest.of(offset, limit);
-        return booksRatingAndPopularityRepository.getBooksOrderedByPopularity(nextPage);
+        return booksRatingAndPopularityRepository.getBooksOrderedByPopularity(nextPage)
+                .map(MappingUtils::mapToBookDto);
     }
 
 }

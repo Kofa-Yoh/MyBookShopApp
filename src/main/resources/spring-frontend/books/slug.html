@@ -65,7 +65,7 @@
                 <h1 class="ProductCard-title" th:text="${slugBook?.title}">Мара и морок
                 </h1>
                 <div class="ProductCard-author"><span class="ProductCard-titleProp">Автор:</span>&#32;
-                  <th:block th:each="author : ${slugBook?.getBookAthorsList()}">
+                  <th:block th:if="${slugBookAuthors != null}" th:each="author : ${slugBookAuthors}">
                     <a th:href="@{'/authors/' + ${author.slug}}" href="#" th:text="${author.name}">Лия Арден</a>
                   </th:block>
                 </div>
@@ -343,8 +343,8 @@
                 </div>
                 <div class="ProductCard-cost">
                   <span class="ProductCard-titleProp">Цена:</span>
-                  <span th:if="${slugBook} != null" class="ProductCard-priceOld" th:text="${slugBook?.price} > 0 ? '₽' + ${slugBook?.priceOld} : ''">₽300</span>
-                  <span class="ProductCard-price" th:text="'₽' + ${slugBook?.getPriceWithDiscount()}">₽180</span>
+                  <span th:if="${slugBook} != null" class="ProductCard-priceOld" th:text="${slugBook?.discount} > 0 ? '₽' + ${slugBook?.price} : ''">₽300</span>
+                  <span class="ProductCard-price" th:text="'₽' + ${slugBook?.discountPrice}">₽180</span>
                 </div>
                 <!--+div.-info
                 //+div.-cost
@@ -403,9 +403,10 @@
               </div>
 
               <div id="myPopup">
-                <p>Ссылки для скачивания</p>
-                <div th:each="bookFile : ${slugBook?.getBookFileList()}">
-                  <a th:href="${'/books/download/' + bookFile.hash}" href="#" th:text="${bookFile.getBookFileExtensionString()}"></a>
+                <p th:if="${slugBookFiles?.size() > 0}">Ссылки для скачивания</p>
+                <p th:if="${slugBookFiles?.size() == 0}">Нет файлов для скачивания</p>
+                <div th:if="${slugBookFiles?.size() > 0}" th:each="bookFile : ${slugBookFiles}">
+                  <a th:href="${'/books/download/' + bookFile.hash}" href="#" th:text="${bookFile.extension}"></a>
                 </div>
                 <span id="myPopup__close" class="close">❎</span>
               </div>

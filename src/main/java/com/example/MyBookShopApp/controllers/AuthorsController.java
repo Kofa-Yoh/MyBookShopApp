@@ -41,7 +41,7 @@ public class AuthorsController {
     }
 
     @ModelAttribute("booksList")
-    public List<Book> booksList(){
+    public List<BookDto> booksList(){
         return new ArrayList<>();
     }
 
@@ -93,7 +93,7 @@ public class AuthorsController {
     @Operation(summary = "Get books", description = "method to get map of authors")
     @GetMapping("/api/authors")
     @ResponseStatus(HttpStatus.OK)
-    public Map<String, List<Author>> authors(){
+    public Map<String, List<AuthorDto>> authors(){
         return authorsService.getAuthorsMap();
     }
 }

@@ -23,7 +23,7 @@ public class RecentBooksController {
     }
 
     @ModelAttribute("booksList")
-    public List<Book> booksList() {
+    public List<BookDto> booksList() {
         return bookService.getPageOfRecentBooksByPubDateBetween(DATE_FILTER_BEGIN, DATE_FILTER_END, 0, 20).getContent();
     }
 
