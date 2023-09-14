@@ -25,10 +25,13 @@ public class BookStatusController {
     private final BookStoreUserRegister bookStoreUserRegister;
     private final Book2UserService book2UserService;
 
-    public BookStatusController(BookRepository bookRepository, BookStoreUserRegister bookStoreUserRegister, Book2UserService book2UserService) {
+    private final BookAssessmentService bookAssessmentService;
+
+    public BookStatusController(BookRepository bookRepository, BookStoreUserRegister bookStoreUserRegister, Book2UserService book2UserService, BookAssessmentService bookAssessmentService) {
         this.bookRepository = bookRepository;
         this.bookStoreUserRegister = bookStoreUserRegister;
         this.book2UserService = book2UserService;
+        this.bookAssessmentService = bookAssessmentService;
     }
 
     @PostMapping("/changeBookStatus/{slugs}/{status}")
@@ -97,6 +100,29 @@ public class BookStatusController {
         Cookie postponedCookie = new Cookie("postponedContents", newPostponedContents);
         postponedCookie.setPath("/books");
         response.addCookie(postponedCookie);
+
+        resultResponse.setResult(true);
+        return resultResponse;
+    }
+
+    @PostMapping("/rateBook")
+    @ResponseBody
+    public RateBookResponse handleRateBook(@RequestBody BookAssessmentDto bookAssessmentDto) {
+        RateBookResponse resultResponse = new RateBookResponse();
+        if (bookAssessmentDto == null || bookAssessmentDto.getBookId() == null || bookAssessmentDto.getValue() == null) {
+            resultResponse.setResult(false);
+            return resultResponse;
+        }
+
+        BookStoreUserDetails currentUser = bookStoreUserRegister.getCurrentUser();
+        if (currentUser == null) {
+            resultResponse.setResult(false);
+            return resultResponse;
+        }
+
+        Book book = bookRepository.findBookBySlug(bookAssessmentDto.getBookId());
+
+        bookAssessmentService.changeBookUserAssessment(currentUser.getBookStoreUser(), book, Byte.parseByte(bookAssessmentDto.getValue()));
 
         resultResponse.setResult(true);
         return resultResponse;

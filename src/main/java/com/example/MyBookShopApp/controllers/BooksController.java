@@ -1,9 +1,8 @@
 package com.example.MyBookShopApp.controllers;
 
-import com.example.MyBookShopApp.data.Book;
-import com.example.MyBookShopApp.data.BookRepository;
-import com.example.MyBookShopApp.data.ResourceStorage;
-import com.example.MyBookShopApp.data.SearchWordDto;
+import com.example.MyBookShopApp.data.*;
+import com.example.MyBookShopApp.security.BookStoreUserDetails;
+import com.example.MyBookShopApp.security.BookStoreUserRegister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -28,13 +27,17 @@ public class BooksController {
     private final ResourceStorage storage;
     private final AuthorsService authorsService;
     private final TagService tagService;
+    private final BookAssessmentService bookAssessmentService;
+    private final BookStoreUserRegister bookStoreUserRegister;
 
     @Autowired
-    public BooksController(BookRepository bookRepository, ResourceStorage storage) {
+    public BooksController(BookRepository bookRepository, ResourceStorage storage, AuthorsService authorsService, TagService tagService, BookAssessmentService bookAssessmentService, BookStoreUserRegister bookStoreUserRegister) {
         this.bookRepository = bookRepository;
         this.storage = storage;
         this.authorsService = authorsService;
         this.tagService = tagService;
+        this.bookAssessmentService = bookAssessmentService;
+        this.bookStoreUserRegister = bookStoreUserRegister;
     }
 
     @ModelAttribute("searchWordDto")
@@ -43,7 +46,7 @@ public class BooksController {
     }
 
     @GetMapping("/{slug}")
-    public String bookPage(@PathVariable("slug") String slug, Model model){
+    public String bookPage(@PathVariable("slug") String slug, Model model) {
         Book book = bookRepository.findBookBySlug(slug);
         BookDto bookDto = MappingUtils.mapToBookDto(book);
         List<AuthorDto> authorDtos = authorsService.convertAuthorsListToDto(book.getBookAuthorsList());
@@ -60,12 +63,20 @@ public class BooksController {
         model.addAttribute("slugBookAuthors", authorDtos);
         model.addAttribute("slugBookTags", tagDtos);
         model.addAttribute("slugBookFiles", fileDtos);
-
+        model.addAttribute("bookUsersRatesCount", bookAssessmentService.getBookUsersRatesCount(book));
+        model.addAttribute("bookRateMap", bookAssessmentService.getBookUsersRates(book));
+        BookStoreUserDetails currentUser = bookStoreUserRegister.getCurrentUser();
+        if (currentUser == null) {
+            model.addAttribute("bookUserRate", 0);
+        } else {
+            model.addAttribute("bookUserRate",
+                    bookAssessmentService.getBookUserRate(currentUser.getBookStoreUser(), book));
+        }
         return "/books/slug";
     }
 
     @PostMapping("/{slug}/img/save")
-    public String saveNewBookImage(@RequestParam("file")MultipartFile file, @PathVariable("slug") String slug) throws IOException {
+    public String saveNewBookImage(@RequestParam("file") MultipartFile file, @PathVariable("slug") String slug) throws IOException {
         String savePath = storage.saveNewBookImage(file, slug);
         Book bookToUpdate = bookRepository.findBookBySlug(slug);
         bookToUpdate.setImage(savePath);

@@ -1,4 +1,4 @@
-package com.example.MyBookShopApp.controllers;
+package com.example.MyBookShopApp.data;
 
 public class ChangeBookStatusResponse {
 
