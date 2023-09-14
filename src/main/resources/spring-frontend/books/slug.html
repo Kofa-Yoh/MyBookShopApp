@@ -65,7 +65,7 @@
                 <h1 class="ProductCard-title" th:text="${slugBook?.title}">Мара и морок
                 </h1>
                 <div class="ProductCard-author"><span class="ProductCard-titleProp">Автор:</span>&#32;
-                  <th:block th:each="author : ${slugBook?.getBookAthorsList()}">
+                  <th:block th:if="${slugBookAuthors != null}" th:each="author : ${slugBookAuthors}">
                     <a th:href="@{'/authors/' + ${author.slug}}" href="#" th:text="${author.name}">Лия Арден</a>
                   </th:block>
                 </div>
