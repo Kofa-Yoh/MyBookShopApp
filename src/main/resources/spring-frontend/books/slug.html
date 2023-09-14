@@ -403,9 +403,10 @@
               </div>
 
               <div id="myPopup">
-                <p>Ссылки для скачивания</p>
-                <div th:each="bookFile : ${slugBook?.getBookFileList()}">
-                  <a th:href="${'/books/download/' + bookFile.hash}" href="#" th:text="${bookFile.getBookFileExtensionString()}"></a>
+                <p th:if="${slugBookFiles?.size() > 0}">Ссылки для скачивания</p>
+                <p th:if="${slugBookFiles?.size() == 0}">Нет файлов для скачивания</p>
+                <div th:if="${slugBookFiles?.size() > 0}" th:each="bookFile : ${slugBookFiles}">
+                  <a th:href="${'/books/download/' + bookFile.hash}" href="#" th:text="${bookFile.extension}"></a>
                 </div>
                 <span id="myPopup__close" class="close">❎</span>
               </div>

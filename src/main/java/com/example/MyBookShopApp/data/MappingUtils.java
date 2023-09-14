@@ -15,15 +15,16 @@ public class MappingUtils {
         this.bookAssessmentService = bookAssessmentService;
     }
 
-    public static UserDto mapToUserDto(BookStoreUserDetails entity){
+    public static UserDto mapToUserDto(BookStoreUserDetails entity) {
         UserDto dto = new UserDto();
         dto.setName(entity.getBookStoreUser().getName());
         dto.setEmail(entity.getBookStoreUser().getEmail());
         dto.setPhone(entity.getBookStoreUser().getPhone());
-        dto.setRoles(entity.getAuthorities().stream().map(a->UserRoleType.getRoleType(a.toString())).collect(Collectors.toSet()));
+        dto.setRoles(entity.getAuthorities().stream().map(a -> UserRoleType.getRoleType(a.toString())).collect(Collectors.toSet()));
         return dto;
     }
-    public static BookDto mapToBookDto(Book book){
+
+    public static BookDto mapToBookDto(Book book) {
         BookDto dto = new BookDto();
         dto.setId(book.getId());
         dto.setSlug(book.getSlug());
@@ -46,6 +47,15 @@ public class MappingUtils {
 
         dto.setRating(bookAssessmentService.getBookRate(book));
 
+        return dto;
+    }
+
+    public static BookFileDto mapToBookFileDto(BookFile file) {
+        BookFileDto dto = new BookFileDto();
+        dto.setId(file.getId());
+        dto.setHash(file.getHash());
+        dto.setPath(file.getPath());
+        dto.setExtension(BookFileType.getFileExtensionStringByTypeId(file.getTypeId()));
         return dto;
     }
 }
