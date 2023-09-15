@@ -29,15 +29,17 @@ public class BooksController {
     private final TagService tagService;
     private final BookAssessmentService bookAssessmentService;
     private final BookStoreUserRegister bookStoreUserRegister;
+    private final BookReviewService bookReviewService;
 
     @Autowired
-    public BooksController(BookRepository bookRepository, ResourceStorage storage, AuthorsService authorsService, TagService tagService, BookAssessmentService bookAssessmentService, BookStoreUserRegister bookStoreUserRegister) {
+    public BooksController(BookRepository bookRepository, ResourceStorage storage, AuthorsService authorsService, TagService tagService, BookAssessmentService bookAssessmentService, BookStoreUserRegister bookStoreUserRegister, BookReviewService bookReviewService) {
         this.bookRepository = bookRepository;
         this.storage = storage;
         this.authorsService = authorsService;
         this.tagService = tagService;
         this.bookAssessmentService = bookAssessmentService;
         this.bookStoreUserRegister = bookStoreUserRegister;
+        this.bookReviewService = bookReviewService;
     }
 
     @ModelAttribute("searchWordDto")
@@ -72,6 +74,8 @@ public class BooksController {
             model.addAttribute("bookUserRate",
                     bookAssessmentService.getBookUserRate(currentUser.getBookStoreUser(), book));
         }
+        model.addAttribute("bookReviews", bookReviewService.getReviewList(book));
+
         return "/books/slug";
     }
 

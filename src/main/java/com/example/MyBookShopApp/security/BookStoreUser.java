@@ -2,6 +2,8 @@ package com.example.MyBookShopApp.security;
 
 import com.example.MyBookShopApp.data.Book2User;
 import com.example.MyBookShopApp.data.BookAssessment;
+import com.example.MyBookShopApp.data.BookReview;
+import com.example.MyBookShopApp.data.BookReviewAssessment;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -33,6 +35,14 @@ public class BookStoreUser {
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<BookAssessment> bookRate = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<BookReview> bookReviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<BookReviewAssessment> reviewLikes = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -96,5 +106,21 @@ public class BookStoreUser {
 
     public void setBookRate(List<BookAssessment> bookRate) {
         this.bookRate = bookRate;
+    }
+
+    public List<BookReview> getBookReviews() {
+        return bookReviews;
+    }
+
+    public void setBookReviews(List<BookReview> bookReviews) {
+        this.bookReviews = bookReviews;
+    }
+
+    public List<BookReviewAssessment> getReviewLikes() {
+        return reviewLikes;
+    }
+
+    public void setReviewLikes(List<BookReviewAssessment> reviewLikes) {
+        this.reviewLikes = reviewLikes;
     }
 }

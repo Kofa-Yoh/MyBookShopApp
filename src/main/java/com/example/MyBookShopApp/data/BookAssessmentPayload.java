@@ -1,6 +1,6 @@
 package com.example.MyBookShopApp.data;
 
-public class BookAssessmentDto {
+public class BookAssessmentPayload {
 
     String bookId;
 

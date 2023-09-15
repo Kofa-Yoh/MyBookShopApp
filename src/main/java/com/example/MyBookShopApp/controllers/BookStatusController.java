@@ -27,11 +27,17 @@ public class BookStatusController {
 
     private final BookAssessmentService bookAssessmentService;
 
-    public BookStatusController(BookRepository bookRepository, BookStoreUserRegister bookStoreUserRegister, Book2UserService book2UserService, BookAssessmentService bookAssessmentService) {
+    private final BookReviewService bookReviewService;
+
+    private final BookReviewAssessmentRepository bookReviewAssessmentRepository;
+
+    public BookStatusController(BookRepository bookRepository, BookStoreUserRegister bookStoreUserRegister, Book2UserService book2UserService, BookAssessmentService bookAssessmentService, BookReviewService bookReviewService, BookReviewAssessmentRepository bookReviewAssessmentRepository) {
         this.bookRepository = bookRepository;
         this.bookStoreUserRegister = bookStoreUserRegister;
         this.book2UserService = book2UserService;
         this.bookAssessmentService = bookAssessmentService;
+        this.bookReviewService = bookReviewService;
+        this.bookReviewAssessmentRepository = bookReviewAssessmentRepository;
     }
 
     @PostMapping("/changeBookStatus/{slugs}/{status}")
@@ -107,9 +113,9 @@ public class BookStatusController {
 
     @PostMapping("/rateBook")
     @ResponseBody
-    public RateBookResponse handleRateBook(@RequestBody BookAssessmentDto bookAssessmentDto) {
+    public RateBookResponse handleRateBook(@RequestBody BookAssessmentPayload bookAssessmentPayload) {
         RateBookResponse resultResponse = new RateBookResponse();
-        if (bookAssessmentDto == null || bookAssessmentDto.getBookId() == null || bookAssessmentDto.getValue() == null) {
+        if (bookAssessmentPayload == null || bookAssessmentPayload.getBookId() == null || bookAssessmentPayload.getValue() == null) {
             resultResponse.setResult(false);
             return resultResponse;
         }
@@ -120,9 +126,86 @@ public class BookStatusController {
             return resultResponse;
         }
 
-        Book book = bookRepository.findBookBySlug(bookAssessmentDto.getBookId());
+        Book book = bookRepository.findBookBySlug(bookAssessmentPayload.getBookId());
+        if (book == null) {
+            resultResponse.setResult(false);
+            return resultResponse;
+        }
 
-        bookAssessmentService.changeBookUserAssessment(currentUser.getBookStoreUser(), book, Byte.parseByte(bookAssessmentDto.getValue()));
+        bookAssessmentService.changeBookUserAssessment(currentUser.getBookStoreUser(), book, Byte.parseByte(bookAssessmentPayload.getValue()));
+
+        resultResponse.setResult(true);
+        return resultResponse;
+    }
+
+    @PostMapping("/bookReview")
+    @ResponseBody
+    public BookReviewResponse handleBookReview(@RequestBody BookReviewPayload bookReviewPayload) {
+        BookReviewResponse resultResponse = new BookReviewResponse();
+        if (bookReviewPayload == null || bookReviewPayload.getBookId() == null ||
+                bookReviewPayload.getText() == null || bookReviewPayload.getText().equals("")) {
+            resultResponse.setResult(false);
+            resultResponse.setError("Отзыв слишком короткий. Напишите, пожалуйста, более развернутый отзыв");
+            return resultResponse;
+        }
+
+        BookStoreUserDetails currentUser = bookStoreUserRegister.getCurrentUser();
+        if (currentUser == null) {
+            resultResponse.setResult(false);
+            resultResponse.setError("Пользователь не определен");
+            return resultResponse;
+        }
+
+        Book book = bookRepository.findBookBySlug(bookReviewPayload.getBookId());
+        if (book == null) {
+            resultResponse.setResult(false);
+            resultResponse.setError("Книга не определена");
+            return resultResponse;
+        }
+
+        bookReviewService.saveReview(book, currentUser.getBookStoreUser(), bookReviewPayload.getText());
+
+        resultResponse.setResult(true);
+        return resultResponse;
+    }
+
+    @PostMapping("/rateBookReview")
+    @ResponseBody
+    public RateBookResponse handleRateBookReview(@RequestBody BookReviewLikePayload payload) {
+        RateBookResponse resultResponse = new RateBookResponse();
+        if (payload == null || payload.getReviewid() == null || payload.getValue() == null) {
+            resultResponse.setResult(false);
+            return resultResponse;
+        }
+
+        BookStoreUserDetails currentUser = bookStoreUserRegister.getCurrentUser();
+        if (currentUser == null) {
+            resultResponse.setResult(false);
+            return resultResponse;
+        }
+
+        BookReview bookReview = bookReviewService.getBookReviewById(payload.getReviewid());
+        if (bookReview == null) {
+            resultResponse.setResult(false);
+            return resultResponse;
+        }
+
+        BookReviewAssessment assessment = bookReviewAssessmentRepository.findBookReviewAssessmentByReviewAndUser(
+                bookReview, currentUser.getBookStoreUser());
+        if (assessment == null) {
+            BookReviewAssessment newAssessment = new BookReviewAssessment();
+            newAssessment.setReview(bookReview);
+            newAssessment.setUser(currentUser.getBookStoreUser());
+            newAssessment.setAssessment(payload.getValue());
+            newAssessment.setCreateTime(LocalDateTime.now());
+            bookReviewAssessmentRepository.save(newAssessment);
+        } else {
+            if (assessment.getAssessment() != payload.getValue()) {
+                assessment.setAssessment(payload.getValue());
+                assessment.setCreateTime(LocalDateTime.now());
+                bookReviewAssessmentRepository.save(assessment);
+            }
+        }
 
         resultResponse.setResult(true);
         return resultResponse;
