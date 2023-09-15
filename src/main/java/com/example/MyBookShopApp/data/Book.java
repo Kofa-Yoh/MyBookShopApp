@@ -85,6 +85,10 @@ public class Book {
 
     @OneToMany(mappedBy = "book")
     @JsonIgnore
+    private List<BookReview> bookReviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "book")
+    @JsonIgnore
     private List<BookAssessment> bookRate = new ArrayList<>();
 
     @JsonProperty(value = "discountPercent")
@@ -106,7 +110,7 @@ public class Book {
     }
 
     @JsonProperty(value = "authorsList")
-    public List<Author> getBookAthorsList(){
+    public List<Author> getBookAuthorsList(){
         return book2Authors.stream()
                 .sorted(Comparator.comparing(Book2Author::getSortIndex))
                 .map(book2Author -> book2Author.getAuthor())
@@ -241,6 +245,14 @@ public class Book {
 
     public void setBook2users(List<Book2User> book2users) {
         this.book2users = book2users;
+    }
+
+    public List<BookReview> getBookReviews() {
+        return bookReviews;
+    }
+
+    public void setBookReviews(List<BookReview> bookReviews) {
+        this.bookReviews = bookReviews;
     }
 
     public List<BookAssessment> getBookRate() {
