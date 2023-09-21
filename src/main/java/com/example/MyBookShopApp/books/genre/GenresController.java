@@ -2,7 +2,6 @@ package com.example.MyBookShopApp.books.genre;
 
 import com.example.MyBookShopApp.books.books.BookService;
 import com.example.MyBookShopApp.books.books.BooksPageDto;
-import com.example.MyBookShopApp.books.search.SearchWordDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -35,11 +34,6 @@ public class GenresController {
     @ModelAttribute("genreSearch")
     public Genre genreSearch() {
         return null;
-    }
-
-    @ModelAttribute("searchWordDto")
-    public SearchWordDto searchWordDto() {
-        return new SearchWordDto();
     }
 
     @GetMapping("/genres")

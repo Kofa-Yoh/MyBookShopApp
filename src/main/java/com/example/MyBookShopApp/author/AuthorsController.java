@@ -3,7 +3,6 @@ package com.example.MyBookShopApp.author;
 import com.example.MyBookShopApp.books.books.BookDto;
 import com.example.MyBookShopApp.books.books.BookService;
 import com.example.MyBookShopApp.books.books.BooksPageDto;
-import com.example.MyBookShopApp.books.search.SearchWordDto;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,11 +50,6 @@ public class AuthorsController {
     @ModelAttribute("booksCount")
     public int booksCount(){
         return 0;
-    }
-
-    @ModelAttribute("searchWordDto")
-    public SearchWordDto searchWordDto() {
-        return new SearchWordDto();
     }
 
     @GetMapping("/authors")

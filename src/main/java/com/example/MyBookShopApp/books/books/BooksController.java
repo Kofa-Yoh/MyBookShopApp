@@ -7,7 +7,6 @@ import com.example.MyBookShopApp.books.bookfiles.BookFile;
 import com.example.MyBookShopApp.books.bookfiles.BookFileDto;
 import com.example.MyBookShopApp.books.bookfiles.ResourceStorage;
 import com.example.MyBookShopApp.books.reviews.BookReviewService;
-import com.example.MyBookShopApp.books.search.SearchWordDto;
 import com.example.MyBookShopApp.books.tags.TagDto;
 import com.example.MyBookShopApp.books.tags.TagService;
 import com.example.MyBookShopApp.security.BookStoreUserDetails;
@@ -50,11 +49,6 @@ public class BooksController {
         this.bookAssessmentService = bookAssessmentService;
         this.bookStoreUserRegister = bookStoreUserRegister;
         this.bookReviewService = bookReviewService;
-    }
-
-    @ModelAttribute("searchWordDto")
-    public SearchWordDto searchWordDto() {
-        return new SearchWordDto();
     }
 
     @GetMapping("/{slug}")

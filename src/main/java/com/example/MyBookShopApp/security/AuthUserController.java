@@ -1,6 +1,5 @@
 package com.example.MyBookShopApp.security;
 
-import com.example.MyBookShopApp.books.search.SearchWordDto;
 import com.example.MyBookShopApp.security.jwt.JWTUtil;
 import com.example.MyBookShopApp.security.jwt.TokenBlacklistService;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -33,11 +32,6 @@ public class AuthUserController {
         this.bookStoreUserDetailService = bookStoreUserDetailService;
         this.jwtUtil = jwtUtil;
         this.tokenBlacklistService = tokenBlacklistService;
-    }
-
-    @ModelAttribute("searchWordDto")
-    public SearchWordDto searchWordDto() {
-        return new SearchWordDto();
     }
 
     @GetMapping("/signin")

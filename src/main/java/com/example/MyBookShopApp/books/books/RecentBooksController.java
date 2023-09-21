@@ -1,6 +1,5 @@
 package com.example.MyBookShopApp.books.books;
 
-import com.example.MyBookShopApp.books.search.SearchWordDto;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,11 +29,6 @@ public class RecentBooksController {
     @ModelAttribute("dateFilterDto")
     public DateFilterDto dateFilterDto() {
         return new DateFilterDto(DATE_FILTER_BEGIN, DATE_FILTER_END);
-    }
-
-    @ModelAttribute("searchWordDto")
-    public SearchWordDto searchWordDto() {
-        return new SearchWordDto();
     }
 
     @GetMapping("/books/recent")

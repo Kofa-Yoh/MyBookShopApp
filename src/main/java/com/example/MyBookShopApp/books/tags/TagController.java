@@ -3,7 +3,6 @@ package com.example.MyBookShopApp.books.tags;
 import com.example.MyBookShopApp.books.books.Book;
 import com.example.MyBookShopApp.books.books.BookService;
 import com.example.MyBookShopApp.books.books.BooksPageDto;
-import com.example.MyBookShopApp.books.search.SearchWordDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,12 +38,6 @@ public class TagController {
     public List<Book> searchTagResults() {
         return new ArrayList<>();
     }
-
-    @ModelAttribute("searchWordDto")
-    public SearchWordDto searchWordDto() {
-        return new SearchWordDto();
-    }
-
 
     @GetMapping({"tags", "tags/{tag}"})
     public String getSearchTagResults(@PathVariable(value = "tag", required = false) String tag,

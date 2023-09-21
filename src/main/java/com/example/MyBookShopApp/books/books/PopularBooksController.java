@@ -1,7 +1,6 @@
 package com.example.MyBookShopApp.books.books;
 
 import com.example.MyBookShopApp.books.popularity.BooksRatingAndPopularityService;
-import com.example.MyBookShopApp.books.search.SearchWordDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,11 +25,6 @@ public class PopularBooksController {
     @ModelAttribute("booksList")
     public List<BookDto> booksList() {
         return new ArrayList<BookDto>();
-    }
-
-    @ModelAttribute("searchWordDto")
-    public SearchWordDto searchWordDto() {
-        return new SearchWordDto();
     }
 
     @GetMapping("/books/popular")
