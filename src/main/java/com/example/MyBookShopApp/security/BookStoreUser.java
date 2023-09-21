@@ -1,9 +1,9 @@
 package com.example.MyBookShopApp.security;
 
-import com.example.MyBookShopApp.data.Book2User;
-import com.example.MyBookShopApp.data.BookAssessment;
-import com.example.MyBookShopApp.data.BookReview;
-import com.example.MyBookShopApp.data.BookReviewAssessment;
+import com.example.MyBookShopApp.books.usersbooks.Book2User;
+import com.example.MyBookShopApp.books.assessments.BookAssessment;
+import com.example.MyBookShopApp.books.reviews.BookReview;
+import com.example.MyBookShopApp.books.reviews.BookReviewAssessment;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 

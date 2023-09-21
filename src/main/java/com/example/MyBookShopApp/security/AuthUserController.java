@@ -1,6 +1,6 @@
 package com.example.MyBookShopApp.security;
 
-import com.example.MyBookShopApp.data.SearchWordDto;
+import com.example.MyBookShopApp.books.search.SearchWordDto;
 import com.example.MyBookShopApp.security.jwt.JWTUtil;
 import com.example.MyBookShopApp.security.jwt.TokenBlacklistService;
 import io.jsonwebtoken.ExpiredJwtException;

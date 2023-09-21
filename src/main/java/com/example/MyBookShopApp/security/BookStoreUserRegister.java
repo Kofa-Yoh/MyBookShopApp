@@ -1,7 +1,6 @@
 package com.example.MyBookShopApp.security;
 
-import com.example.MyBookShopApp.data.MappingUtils;
-import com.example.MyBookShopApp.data.UserDto;
+import com.example.MyBookShopApp.commons.utils.MappingUtils;
 import com.example.MyBookShopApp.security.jwt.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -9,7 +8,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
