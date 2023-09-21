@@ -45,7 +45,7 @@ public class UserBooksController {
         } else {
             booksInCookie = "";
         }
-        if (!cartContents.equals(booksInCookie)) {
+        if (cartContents == null || !cartContents.equals(booksInCookie)) {
             Cookie cookie = new Cookie("cartContents", booksInCookie);
             cookie.setPath("/books");
             response.addCookie(cookie);
@@ -76,7 +76,7 @@ public class UserBooksController {
         } else {
             booksInCookie = "";
         }
-        if (!postponedContents.equals(booksInCookie)) {
+        if (postponedContents == null || !postponedContents.equals(booksInCookie)) {
             Cookie cookie = new Cookie("postponedContents", booksInCookie);
             cookie.setPath("/books");
             response.addCookie(cookie);
