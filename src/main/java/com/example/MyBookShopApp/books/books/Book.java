@@ -5,7 +5,6 @@ import com.example.MyBookShopApp.author.Book2Author;
 import com.example.MyBookShopApp.books.assessments.BookAssessment;
 import com.example.MyBookShopApp.books.bookfiles.BookFile;
 import com.example.MyBookShopApp.books.genre.Genre;
-import com.example.MyBookShopApp.books.popularity.BooksStatistic;
 import com.example.MyBookShopApp.books.reviews.BookReview;
 import com.example.MyBookShopApp.books.tags.Tag;
 import com.example.MyBookShopApp.books.usersbooks.Book2User;
@@ -67,10 +66,6 @@ public class Book {
     @OneToMany(mappedBy = "book")
     @JsonIgnore
     List<BookFile> bookFileList = new ArrayList<>();
-
-    @OneToOne(mappedBy = "book")
-    @JsonIgnore
-    private BooksStatistic statistic;
 
     @ManyToMany
     @JsonIgnore
@@ -222,14 +217,6 @@ public class Book {
 
     public void setBookFileList(List<BookFile> bookFileList) {
         this.bookFileList = bookFileList;
-    }
-
-    public BooksStatistic getStatistic() {
-        return statistic;
-    }
-
-    public void setStatistic(BooksStatistic statistic) {
-        this.statistic = statistic;
     }
 
     public Set<Tag> getTags() {

@@ -39,9 +39,6 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 
     Page<Book> findByPubDateBetween(Date begin, Date end, Pageable nextPage);
 
-    @Query("from Book where isBestseller = 1")
-    Page<Book> getPopularBooks(Pageable nextPage);
-
     Page<Book> findBooksByBook2Authors_Author_Slug(String authorSlug, Pageable nextPage);
 
     Page<Book> findBookByTags_Name(String tag, Pageable nextPage);
@@ -51,4 +48,13 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
     Book findBookBySlug(String slug);
 
     List<Book> findBooksBySlugIn(ArrayList<String> slugs);
+
+    @Query("from Book b" +
+            " left join b.book2users s" +
+            " left join s.linkType t" +
+            " group by b.id" +
+            " order by count(1) filter (where t.code = com.example.MyBookShopApp.books.usersbooks.Book2UserTypeDto.PAID) +\n" +
+            "            0.7 * count(1) filter (where t.code = com.example.MyBookShopApp.books.usersbooks.Book2UserTypeDto.CART) +\n" +
+            "            0.4 * count(1) filter (where t.code = com.example.MyBookShopApp.books.usersbooks.Book2UserTypeDto.KEPT) DESC")
+    Page<Book> getBooksOrderedByPopularity(Pageable nextPage);
 }

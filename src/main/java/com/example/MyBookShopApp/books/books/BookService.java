@@ -49,7 +49,7 @@ public class BookService {
 
     public Page<BookDto> getPageOfPopularBooks(Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
-        return bookRepository.getPopularBooks(nextPage)
+        return bookRepository.getBooksOrderedByPopularity(nextPage)
                 .map(MappingUtils::mapToBookDto);
     }
 

@@ -1,6 +1,5 @@
 package com.example.MyBookShopApp.books.books;
 
-import com.example.MyBookShopApp.books.popularity.BooksRatingAndPopularityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,11 +14,11 @@ import java.util.List;
 @Controller
 public class PopularBooksController {
 
-    private final BooksRatingAndPopularityService booksRatingAndPopularityService;
+    private final BookService bookService;
 
     @Autowired
-    public PopularBooksController(BooksRatingAndPopularityService booksRatingAndPopularityService) {
-        this.booksRatingAndPopularityService = booksRatingAndPopularityService;
+    public PopularBooksController(BookService bookService) {
+        this.bookService = bookService;
     }
 
     @ModelAttribute("booksList")
@@ -29,7 +28,7 @@ public class PopularBooksController {
 
     @GetMapping("/books/popular")
     public String recentBooksPage(Model model) {
-        model.addAttribute("booksList", booksRatingAndPopularityService.getPopularBooks(0, 20).getContent());
+        model.addAttribute("booksList", bookService.getPageOfPopularBooks(0, 20).getContent());
         return "books/popular";
     }
 
@@ -37,6 +36,6 @@ public class PopularBooksController {
     @ResponseBody
     public BooksPageDto getNextRecentPage(@RequestParam("offset") Integer offset,
                                           @RequestParam("limit") Integer limit) {
-        return new BooksPageDto(booksRatingAndPopularityService.getPopularBooks(offset, limit).getContent());
+        return new BooksPageDto(bookService.getPageOfPopularBooks(offset, limit).getContent());
     }
 }
