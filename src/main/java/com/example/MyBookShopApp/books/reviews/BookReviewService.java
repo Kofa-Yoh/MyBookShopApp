@@ -30,12 +30,44 @@ public class BookReviewService {
         bookReviewRepository.save(bookReview);
     }
 
-
     public List<BookReviewDto> getReviewList(Book book) {
         return bookReviewRepository.findBookReviewsByBook(book)
                 .stream()
                 .map(MappingUtils::mapToBookReviewDto)
                 .sorted(BookReviewDto::compareByRatingSortedAlgorithm)
                 .toList();
+    }
+
+    public Integer getReviewLikes(BookReview review) {
+        List<BookReviewAssessment> reviewLikes = review.getReviewLikes();
+        if (reviewLikes.size() == 0) {
+            return 0;
+        } else {
+            return (int) reviewLikes.stream()
+                    .filter(assessment -> assessment.getAssessment() == 1)
+                    .count();
+        }
+    }
+
+    public Integer getReviewDislikes(BookReview review) {
+        List<BookReviewAssessment> reviewLikes = review.getReviewLikes();
+        if (reviewLikes.size() == 0) {
+            return 0;
+        } else {
+            return (int) reviewLikes.stream()
+                    .filter(assessment -> assessment.getAssessment() == -1)
+                    .count();
+        }
+    }
+
+    public Integer getReviewRating(BookReview review) {
+        int likesCount = getReviewLikes(review);
+        int dislikesCount = getReviewDislikes(review);
+        if (likesCount == 0 && dislikesCount == 0) {
+            return 0;
+        } else {
+            double ratingDouble = likesCount * 5 / (likesCount + dislikesCount);
+            return Math.toIntExact(Math.round(ratingDouble > 0 && ratingDouble < 1 ? 1 : ratingDouble));
+        }
     }
 }

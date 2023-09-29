@@ -62,4 +62,10 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
     @Query(nativeQuery = true, value = "SELECT * FROM fn_get_recommended_books_for_user(:user_id);")
     Page<Book> getBooksForUserOrderedByPubDateAndRating(@Param("user_id")Integer user_id, Pageable nextPage);
 
+    @Query(nativeQuery = true, value = "SELECT * FROM fn_get_recommended_books_for_user(:user_id);")
+    List<Book> getBooksListForUserOrderedByPubDateAndRating(@Param("user_id")Integer user_id);
+
+    Book findBookById(int id);
+
+    List<Book> findBooksByBook2users_User_Id(Integer user_id);
 }

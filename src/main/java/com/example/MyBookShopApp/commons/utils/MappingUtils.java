@@ -7,10 +7,7 @@ import com.example.MyBookShopApp.books.assessments.BookAssessmentService;
 import com.example.MyBookShopApp.books.bookfiles.BookFile;
 import com.example.MyBookShopApp.books.bookfiles.BookFileDto;
 import com.example.MyBookShopApp.books.bookfiles.BookFileType;
-import com.example.MyBookShopApp.books.reviews.BookReview;
-import com.example.MyBookShopApp.books.reviews.BookReviewAssessment;
-import com.example.MyBookShopApp.books.reviews.BookReviewAssessmentRepository;
-import com.example.MyBookShopApp.books.reviews.BookReviewDto;
+import com.example.MyBookShopApp.books.reviews.*;
 import com.example.MyBookShopApp.security.BookStoreUserDetails;
 import com.example.MyBookShopApp.security.BookStoreUserRegister;
 import com.example.MyBookShopApp.security.UserDto;
@@ -19,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,11 +23,13 @@ public class MappingUtils {
 
     private static BookAssessmentService bookAssessmentService;
     private static BookReviewAssessmentRepository bookReviewAssessmentRepository;
+    private static BookReviewService bookReviewService;
     private static BookStoreUserRegister bookStoreUserRegister;
 
-    public MappingUtils(BookAssessmentService bookAssessmentService, BookReviewAssessmentRepository bookReviewAssessmentRepository, BookStoreUserRegister bookStoreUserRegister) {
+    public MappingUtils(BookAssessmentService bookAssessmentService, BookReviewAssessmentRepository bookReviewAssessmentRepository, BookReviewService bookReviewService, BookStoreUserRegister bookStoreUserRegister) {
         this.bookAssessmentService = bookAssessmentService;
         this.bookReviewAssessmentRepository = bookReviewAssessmentRepository;
+        this.bookReviewService = bookReviewService;
         this.bookStoreUserRegister = bookStoreUserRegister;
     }
 
@@ -88,27 +86,10 @@ public class MappingUtils {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
         dto.setCreateTime(review.getCreateTime().format(formatter));
 
-        int likesCount;
-        int dislikesCount;
-        int rating;
-        List<BookReviewAssessment> reviewLikes = review.getReviewLikes();
-        if (reviewLikes.size() == 0) {
-            likesCount = 0;
-            dislikesCount = 0;
-            rating = 0;
-        } else {
-            likesCount = (int) reviewLikes.stream()
-                    .filter(assessment -> assessment.getAssessment() == 1)
-                    .count();
-            dislikesCount = (int) reviewLikes.stream()
-                    .filter(assessment -> assessment.getAssessment() == -1)
-                    .count();
-            double ratingDouble = likesCount * 5 / (likesCount + dislikesCount);
-            rating = Math.toIntExact(Math.round(ratingDouble > 0 && ratingDouble < 1 ? 1 : ratingDouble));
-        }
-        dto.setLikesCount(likesCount);
-        dto.setDislikesCount(dislikesCount);
-        dto.setRating(rating);
+        dto.setLikesCount(bookReviewService.getReviewLikes(review));
+        dto.setDislikesCount(bookReviewService.getReviewDislikes(review));
+        dto.setRating(bookReviewService.getReviewRating(review));
+
         Byte like = 0;
         BookStoreUserDetails currentUser = bookStoreUserRegister.getCurrentUser();
         if (currentUser != null) {

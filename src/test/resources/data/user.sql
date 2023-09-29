@@ -1,0 +1,1 @@
+INSERT INTO public.users (email, name, password, phone, auth_type) VALUES ('testing@gmail.com', 'Tester', '$2a$10$/Xvk298LirJa48cSdpMLUucHirRwNNwKkQcAz03We4LAzBj2tBVCi', '+7 (911) 111-11-11', 'DATABASE');

@@ -32,7 +32,7 @@ public class BookStoreUserRegister {
         this.jwtUtil = jwtUtil;
     }
 
-    public void registerNewUser(RegistrationForm registrationForm) {
+    public BookStoreUser registerNewUser(RegistrationForm registrationForm) {
         BookStoreUser bookStoreUserByEmail = bookStoreUserRepository.findBookStoreUserByEmail(registrationForm.getEmail());
         if (bookStoreUserByEmail == null) {
             BookStoreUser user = new BookStoreUser();
@@ -42,13 +42,16 @@ public class BookStoreUserRegister {
             user.setPassword(passwordEncoder.encode(registrationForm.getPass()));
             user.setAuthType(AuthenticationType.DATABASE);
             bookStoreUserRepository.save(user);
+            return user;
         } else if (bookStoreUserByEmail.getAuthType() != AuthenticationType.DATABASE) {
             bookStoreUserByEmail.setName(registrationForm.getName());
             bookStoreUserByEmail.setPhone(registrationForm.getPhone());
             bookStoreUserByEmail.setPassword(passwordEncoder.encode(registrationForm.getPass()));
             bookStoreUserByEmail.setAuthType(AuthenticationType.DATABASE);
             bookStoreUserRepository.save(bookStoreUserByEmail);
+            return bookStoreUserByEmail;
         }
+        return bookStoreUserByEmail;
     }
 
     public ContactConfirmationResponse login(ContactConfirmationPayload payload) {
