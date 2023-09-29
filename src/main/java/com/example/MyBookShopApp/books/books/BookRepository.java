@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,4 +58,8 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
             "            0.7 * count(1) filter (where t.code = com.example.MyBookShopApp.books.usersbooks.Book2UserTypeDto.CART) +\n" +
             "            0.4 * count(1) filter (where t.code = com.example.MyBookShopApp.books.usersbooks.Book2UserTypeDto.KEPT) DESC")
     Page<Book> getBooksOrderedByPopularity(Pageable nextPage);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM fn_get_recommended_books_for_user(:user_id);")
+    Page<Book> getBooksForUserOrderedByPubDateAndRating(@Param("user_id")Integer user_id, Pageable nextPage);
+
 }

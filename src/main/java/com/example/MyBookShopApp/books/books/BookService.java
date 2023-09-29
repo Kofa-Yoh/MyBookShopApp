@@ -2,6 +2,8 @@ package com.example.MyBookShopApp.books.books;
 
 import com.example.MyBookShopApp.commons.utils.MappingUtils;
 import com.example.MyBookShopApp.errs.BookstoreApiWrongParameterException;
+import com.example.MyBookShopApp.security.BookStoreUserDetails;
+import com.example.MyBookShopApp.security.BookStoreUserRegister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,10 +18,12 @@ import java.util.stream.Collectors;
 public class BookService {
 
     private BookRepository bookRepository;
+    private final BookStoreUserRegister bookStoreUserRegister;
 
     @Autowired
-    public BookService(BookRepository bookRepository) {
+    public BookService(BookRepository bookRepository, BookStoreUserRegister bookStoreUserRegister) {
         this.bookRepository = bookRepository;
+        this.bookStoreUserRegister = bookStoreUserRegister;
     }
 
     public List<BookDto> getBooksData() {
@@ -31,7 +35,14 @@ public class BookService {
 
     public Page<BookDto> getPageOfRecommendedBooks(Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
-        return bookRepository.findAll(nextPage)
+        BookStoreUserDetails currentUser = bookStoreUserRegister.getCurrentUser();
+        Integer userId;
+        if (currentUser == null) {
+            userId = 0;
+        } else {
+            userId = currentUser.getBookStoreUser().getId();
+        }
+        return bookRepository.getBooksForUserOrderedByPubDateAndRating(userId, nextPage)
                 .map(MappingUtils::mapToBookDto);
     }
 
