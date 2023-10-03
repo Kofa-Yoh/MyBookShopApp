@@ -107,6 +107,7 @@ public class BookStatusController {
     }
 
     private String addInUserBooksCookies(ArrayList<String> slugs, String cookieContents) {
+        cookieContents = cookieContents == null ? "" : cookieContents;
         StringJoiner stringJoiner = new StringJoiner("/");
         stringJoiner.add(cookieContents);
         for (String slug : slugs) {
