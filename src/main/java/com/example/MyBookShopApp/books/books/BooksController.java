@@ -84,11 +84,17 @@ public class BooksController {
     }
 
     @PostMapping("/{slug}/img/save")
-    public String saveNewBookImage(@RequestParam("file") MultipartFile file, @PathVariable("slug") String slug) throws IOException {
-        String savePath = storage.saveNewBookImage(file, slug);
-        Book bookToUpdate = bookRepository.findBookBySlug(slug);
-        bookToUpdate.setImage(savePath);
-        bookRepository.save(bookToUpdate); //save new path to db
+    public String saveNewBookImage(@RequestParam("file") MultipartFile file, @PathVariable("slug") String slug) throws Exception {
+        try {
+            String savePath = storage.saveNewBookImage(file, slug);
+            Book bookToUpdate = bookRepository.findBookBySlug(slug);
+            if (savePath != null || !savePath.equals("")) {
+                bookToUpdate.setImage(savePath);
+                bookRepository.save(bookToUpdate); //save new path to db
+            }
+        } catch (Exception ex) {
+            throw ex;
+        }
 
         return ("redirect:/books/" + slug);
     }
