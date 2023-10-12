@@ -2,6 +2,7 @@ package com.example.MyBookShopApp.books.usersbooks;
 
 import com.example.MyBookShopApp.books.books.Book;
 import com.example.MyBookShopApp.books.books.BookDto;
+import com.example.MyBookShopApp.commons.aspects.Loggable;
 import com.example.MyBookShopApp.commons.utils.MappingUtils;
 import com.example.MyBookShopApp.security.BookStoreUser;
 import com.example.MyBookShopApp.security.BookStoreUserRegister;
@@ -36,6 +37,7 @@ public class Book2UserService {
         }
     }
 
+    @Loggable
     public void addBook2User(Book book, BookStoreUser user, String status, LocalDateTime time) {
         Book2UserTypeDto linkType;
         try {
@@ -54,6 +56,7 @@ public class Book2UserService {
         }
     }
 
+    @Loggable
     public void removeBook2UserWithLinkType(Book book, BookStoreUser user, Book2UserTypeDto linkType) {
         List<Book2User> list = book2UserRepository.findBook2UsersByBookAndUserAndLinkType_Code(book, user, linkType);
         book2UserRepository.findBook2UsersByBookAndUserAndLinkType_Code(book, user, linkType)
