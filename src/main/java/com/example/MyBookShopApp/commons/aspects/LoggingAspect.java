@@ -33,6 +33,9 @@ public class LoggingAspect {
 
     @Before(value = "loggableMethod()")
     public void beforeLoggableMethod(JoinPoint joinPoint) {
+        if (joinPoint == null) {
+            return;
+        }
         logger.info("Method " + joinPoint.getSignature().getName());
         Arrays.stream(joinPoint.getArgs())
                 .map(Objects::toString)
@@ -41,16 +44,27 @@ public class LoggingAspect {
 
     @After(value = "args(book, user, status, time) && loggableMethod()")
     public void afterAddBook2User(Book book, BookStoreUser user, String status, LocalDateTime time) {
+        if (book == null || user == null) {
+            logger.info("Null Object in method --- > \nBook: " + book + "\nBookStoreUser: " + user);
+            return;
+        }
         logger.info("User " + user.getEmail() + " add book \"" + book.getTitle() + "\" to the " + status);
     }
 
     @After(value = "args(book, user, linkType) && loggableMethod()")
     public void afterAddBook2User(Book book, BookStoreUser user, Book2UserTypeDto linkType) {
+        if (book == null || user == null || linkType == null) {
+            logger.info("Null Object in method --- > \n Book: " + book + "\nBookStoreUser: " + user + "\nBook2UserTypeDto: " + linkType);
+            return;
+        }
         logger.info("User " + user.getEmail() + " remove book \"" + book.getTitle() + "\" from " + linkType.getValue());
     }
 
     @Around(value = "allApiMethodsWithoutParameters()")
     public Object afterApiMethodsWithoutParameters(ProceedingJoinPoint proceedingJoinPoint) {
+        if (proceedingJoinPoint == null) {
+            return null;
+        }
         logger.info("---------- Method " + proceedingJoinPoint.getSignature().getName() + " begins ----------");
         Object returnValue = null;
         try {
@@ -65,16 +79,25 @@ public class LoggingAspect {
 
     @Before(value = "args(param) && allApiMethodsWithParameters()")
     public void afterApiMethodsWithOneParameter(JoinPoint joinPoint, Object param) {
+        if (joinPoint == null) {
+            return;
+        }
         logger.info("Method " + joinPoint.getSignature().getName() + " with arg: " + param);
     }
 
     @Before(value = "args(one, two) && allApiMethodsWithParameters()")
     public void afterApiMethodsWithTwoParameters(JoinPoint joinPoint, Object one, Object two) {
+        if (joinPoint == null) {
+            return;
+        }
         logger.info("Method " + joinPoint.getSignature().getName() + " with args: " + one + ", " + two);
     }
 
     @AfterThrowing(value = "allApiMethodsWithParameters()", throwing = "ex")
     public void afterApiMethodsThrowingException(JoinPoint joinPoint, Exception ex) {
+        if (joinPoint == null) {
+            return;
+        }
         logger.info("Method " + joinPoint.getSignature().getName() + " throws exception " + ex.getClass().getSimpleName() + ": " + ex.getLocalizedMessage());
     }
 }
