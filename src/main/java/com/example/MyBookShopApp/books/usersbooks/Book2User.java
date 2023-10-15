@@ -3,11 +3,15 @@ package com.example.MyBookShopApp.books.usersbooks;
 import com.example.MyBookShopApp.books.books.Book;
 import com.example.MyBookShopApp.security.BookStoreUser;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "book2user")
+@Getter
+@Setter
 public class Book2User {
 
     @Id
@@ -28,44 +32,4 @@ public class Book2User {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private BookStoreUser user;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getTime() {
-        return time;
-    }
-
-    public void setTime(LocalDateTime time) {
-        this.time = time;
-    }
-
-    public Book2UserType getLinkType() {
-        return linkType;
-    }
-
-    public void setLinkType(Book2UserType linkType) {
-        this.linkType = linkType;
-    }
-
-    public Book getBook() {
-        return book;
-    }
-
-    public void setBook(Book book) {
-        this.book = book;
-    }
-
-    public BookStoreUser getUser() {
-        return user;
-    }
-
-    public void setUser(BookStoreUser user) {
-        this.user = user;
-    }
 }

@@ -1,24 +1,21 @@
 package com.example.MyBookShopApp.security;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
+@Setter
+@ToString
 public class UserDto {
 
     private String name;
     private String email;
     private String phone;
     private Set<UserRoleType> roles = new HashSet<>();
-
-    @Override
-    public String toString() {
-        return "UserDto{" +
-                "name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", roles='" + roles + '\'' +
-                '}';
-    }
 
     public UserDto() {
         this.name = "Пользователь";
@@ -37,37 +34,5 @@ public class UserDto {
 
     public Boolean hasRole(String role){
         return roles.contains(UserRoleType.valueOf(role));
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public Set<UserRoleType> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<UserRoleType> roles) {
-        this.roles.addAll(roles);
     }
 }

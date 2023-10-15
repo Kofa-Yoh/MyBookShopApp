@@ -3,12 +3,16 @@ package com.example.MyBookShopApp.books.assessments;
 import com.example.MyBookShopApp.books.books.Book;
 import com.example.MyBookShopApp.security.BookStoreUser;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "book_assesment")
+@Getter
+@Setter
 public class BookAssessment {
 
     @Id
@@ -28,47 +32,7 @@ public class BookAssessment {
 
     private LocalDateTime createTime;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Book getBook() {
-        return book;
-    }
-
-    public void setBook(Book book) {
-        this.book = book;
-    }
-
-    public BookStoreUser getUser() {
-        return user;
-    }
-
-    public void setUser(BookStoreUser user) {
-        this.user = user;
-    }
-
-    public Byte getRate() {
-        return rate;
-    }
-
     public Integer getRateInt() {
         return rate.intValue();
-    }
-
-    public void setRate(Byte rate) {
-        this.rate = rate;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
     }
 }

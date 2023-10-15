@@ -67,7 +67,7 @@ public class BookReviewController {
     @ResponseBody
     public RateBookResponse handleRateBookReview(@RequestBody BookReviewLikePayload payload) {
         RateBookResponse resultResponse = new RateBookResponse();
-        if (payload == null || payload.getReviewid() == null || payload.getValue() == null) {
+        if (payload == null || payload.getReviewId() == null || payload.getValue() == null) {
             resultResponse.setResult(false);
             return resultResponse;
         }
@@ -78,7 +78,7 @@ public class BookReviewController {
             return resultResponse;
         }
 
-        BookReview bookReview = bookReviewService.getBookReviewById(payload.getReviewid());
+        BookReview bookReview = bookReviewService.getBookReviewById(payload.getReviewId());
         if (bookReview == null) {
             resultResponse.setResult(false);
             return resultResponse;

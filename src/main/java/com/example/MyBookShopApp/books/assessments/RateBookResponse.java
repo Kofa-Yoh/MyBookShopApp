@@ -1,14 +1,11 @@
 package com.example.MyBookShopApp.books.assessments;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class RateBookResponse {
 
     Boolean result;
-
-    public Boolean getResult() {
-        return result;
-    }
-
-    public void setResult(Boolean result) {
-        this.result = result;
-    }
 }

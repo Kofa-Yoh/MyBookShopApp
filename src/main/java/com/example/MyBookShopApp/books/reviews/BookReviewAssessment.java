@@ -2,12 +2,16 @@ package com.example.MyBookShopApp.books.reviews;
 
 import com.example.MyBookShopApp.security.BookStoreUser;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "book_review_likes")
+@Getter
+@Setter
 public class BookReviewAssessment {
 
     @Id
@@ -26,45 +30,4 @@ public class BookReviewAssessment {
     private Byte assessment;
 
     private LocalDateTime createTime;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public BookReview getReview() {
-        return review;
-    }
-
-    public void setReview(BookReview review) {
-        this.review = review;
-    }
-
-    public BookStoreUser getUser() {
-        return user;
-    }
-
-    public void setUser(BookStoreUser user) {
-        this.user = user;
-    }
-
-    @ColumnDefault("0")
-    public Byte getAssessment() {
-        return assessment;
-    }
-
-    public void setAssessment(Byte assessment) {
-        this.assessment = assessment;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
 }

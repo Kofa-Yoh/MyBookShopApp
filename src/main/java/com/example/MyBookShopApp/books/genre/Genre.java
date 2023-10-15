@@ -3,11 +3,15 @@ package com.example.MyBookShopApp.books.genre;
 import com.example.MyBookShopApp.books.books.Book;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Set;
 
 @Entity
 @Table(name = "genres")
+@Getter
+@Setter
 public class Genre {
 
     @Id
@@ -16,11 +20,11 @@ public class Genre {
 
     private String name;
 
-    @ManyToOne(optional=true, fetch=FetchType.LAZY)
-    @JoinColumn(name="root_id")
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "root_id")
     private Genre root;
 
-    @OneToMany(mappedBy="root")
+    @OneToMany(mappedBy = "root")
     @JsonIgnore
     private Set<Genre> children;
 
@@ -34,45 +38,5 @@ public class Genre {
                 "name='" + name + '\'' +
                 ", children=" + children.toString() +
                 '}';
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Genre getRoot() {
-        return root;
-    }
-
-    public void setRoot(Genre root) {
-        this.root = root;
-    }
-
-    public Set<Genre> getChildren() {
-        return children;
-    }
-
-    public void setChildren(Set<Genre> children) {
-        this.children = children;
-    }
-
-    public Set<Book> getBooks() {
-        return books;
-    }
-
-    public void setBooks(Set<Book> books) {
-        this.books = books;
     }
 }

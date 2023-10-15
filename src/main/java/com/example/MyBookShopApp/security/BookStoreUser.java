@@ -6,6 +6,8 @@ import com.example.MyBookShopApp.books.reviews.BookReview;
 import com.example.MyBookShopApp.books.reviews.BookReviewAssessment;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
+@Getter
+@Setter
 public class BookStoreUser {
 
     @Id
@@ -43,84 +47,4 @@ public class BookStoreUser {
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<BookReviewAssessment> reviewLikes = new ArrayList<>();
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public AuthenticationType getAuthType() {
-        return authType;
-    }
-
-    public void setAuthType(AuthenticationType authType) {
-        this.authType = authType;
-    }
-
-    public List<Book2User> getBook2users() {
-        return book2users;
-    }
-
-    public void setBook2users(List<Book2User> book2users) {
-        this.book2users = book2users;
-    }
-
-    public List<BookAssessment> getBookRate() {
-        return bookRate;
-    }
-
-    public void setBookRate(List<BookAssessment> bookRate) {
-        this.bookRate = bookRate;
-    }
-
-    public List<BookReview> getBookReviews() {
-        return bookReviews;
-    }
-
-    public void setBookReviews(List<BookReview> bookReviews) {
-        this.bookReviews = bookReviews;
-    }
-
-    public List<BookReviewAssessment> getReviewLikes() {
-        return reviewLikes;
-    }
-
-    public void setReviewLikes(List<BookReviewAssessment> reviewLikes) {
-        this.reviewLikes = reviewLikes;
-    }
 }

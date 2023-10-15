@@ -1,9 +1,14 @@
 package com.example.MyBookShopApp.books.books;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@Getter
+@NoArgsConstructor
 public class DateFilterDto {
 
     private String begin;
@@ -22,9 +27,6 @@ public class DateFilterDto {
         this.end = new SimpleDateFormat(DATE_FORMAT).format(endDate);
     }
 
-    public DateFilterDto() {
-    }
-
     public Date getBeginDate() {
         try {
             return new SimpleDateFormat(DATE_FORMAT).parse(begin);
@@ -41,20 +43,12 @@ public class DateFilterDto {
         }
     }
 
-    public String getBegin() {
-        return begin;
-    }
-
     public void setBegin(String begin) {
         this.begin = begin;
     }
 
     public void setBegin(Date beginDate) {
         this.begin = new SimpleDateFormat(DATE_FORMAT).format(beginDate);
-    }
-
-    public String getEnd() {
-        return end;
     }
 
     public void setEnd(String end) {

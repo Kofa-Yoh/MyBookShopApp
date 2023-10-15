@@ -1,24 +1,12 @@
 package com.example.MyBookShopApp.books.reviews;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class BookReviewLikePayload {
 
-    Integer reviewid;
-
+    Integer reviewId;
     Byte value;
-
-    public Integer getReviewid() {
-        return reviewid;
-    }
-
-    public void setReviewid(Integer reviewid) {
-        this.reviewid = reviewid;
-    }
-
-    public Byte getValue() {
-        return value;
-    }
-
-    public void setValue(Byte value) {
-        this.value = value;
-    }
 }
