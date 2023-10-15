@@ -3,6 +3,7 @@ package com.example.MyBookShopApp.books.tags;
 import com.example.MyBookShopApp.books.books.Book;
 import com.example.MyBookShopApp.books.books.BookService;
 import com.example.MyBookShopApp.books.books.BooksPageDto;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,16 +14,11 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
+@AllArgsConstructor
 public class TagController {
 
     private final BookService bookService;
     private final TagService tagService;
-
-    @Autowired
-    public TagController(BookService bookService, TagService tagService) {
-        this.bookService = bookService;
-        this.tagService = tagService;
-    }
 
     @ModelAttribute("tag")
     public String tag() {

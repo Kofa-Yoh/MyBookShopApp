@@ -7,6 +7,7 @@ import com.example.MyBookShopApp.security.BookStoreUserRegister;
 import com.example.MyBookShopApp.commons.utils.MappingUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -20,17 +21,12 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/books")
+@AllArgsConstructor
 public class UserBooksController {
 
     private final BookRepository bookRepository;
     private final BookStoreUserRegister bookStoreUserRegister;
     private final Book2UserService book2UserService;
-
-    public UserBooksController(BookRepository bookRepository, BookStoreUserRegister bookStoreUserRegister, Book2UserService book2UserService) {
-        this.bookRepository = bookRepository;
-        this.bookStoreUserRegister = bookStoreUserRegister;
-        this.book2UserService = book2UserService;
-    }
 
     @GetMapping("/cart")
     public String handleCartRequest(@CookieValue(value = "cartContents", required = false) String cartContents,

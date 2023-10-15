@@ -2,6 +2,7 @@ package com.example.MyBookShopApp.books.assessments;
 
 import com.example.MyBookShopApp.books.books.Book;
 import com.example.MyBookShopApp.security.BookStoreUser;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -11,13 +12,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class BookAssessmentService {
 
     private final BookAssessmentRepository bookAssessmentRepository;
-
-    public BookAssessmentService(BookAssessmentRepository bookAssessmentRepository) {
-        this.bookAssessmentRepository = bookAssessmentRepository;
-    }
 
     public void changeBookUserAssessment(BookStoreUser user, Book book, Byte newRate) {
         BookAssessment bookAssessment = bookAssessmentRepository.findBookAssessmentByUserAndBook(user, book);

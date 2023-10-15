@@ -5,6 +5,7 @@ import com.example.MyBookShopApp.books.books.BookRepository;
 import com.example.MyBookShopApp.books.assessments.RateBookResponse;
 import com.example.MyBookShopApp.security.BookStoreUserDetails;
 import com.example.MyBookShopApp.security.BookStoreUserRegister;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/books")
+@AllArgsConstructor
 public class BookReviewController {
 
     private final BookRepository bookRepository;
@@ -24,13 +26,6 @@ public class BookReviewController {
     private final BookReviewService bookReviewService;
 
     private final BookReviewAssessmentRepository bookReviewAssessmentRepository;
-
-    public BookReviewController(BookRepository bookRepository, BookStoreUserRegister bookStoreUserRegister, BookReviewService bookReviewService, BookReviewAssessmentRepository bookReviewAssessmentRepository) {
-        this.bookRepository = bookRepository;
-        this.bookStoreUserRegister = bookStoreUserRegister;
-        this.bookReviewService = bookReviewService;
-        this.bookReviewAssessmentRepository = bookReviewAssessmentRepository;
-    }
 
     @PostMapping("/bookReview")
     @ResponseBody

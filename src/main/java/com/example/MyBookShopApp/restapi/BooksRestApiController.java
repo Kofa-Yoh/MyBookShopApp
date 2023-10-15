@@ -5,6 +5,7 @@ import com.example.MyBookShopApp.books.books.BookService;
 import com.example.MyBookShopApp.errs.BookstoreApiWrongParameterException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,14 +17,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@AllArgsConstructor
 public class BooksRestApiController {
 
     private final BookService bookService;
-
-    @Autowired
-    public BooksRestApiController(BookService bookService) {
-        this.bookService = bookService;
-    }
 
     @GetMapping("/books/by-author")
     @Operation(summary = "Get book list by author's name", description = "operation to get book list by part of author's name")

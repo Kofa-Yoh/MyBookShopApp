@@ -1,17 +1,15 @@
 package com.example.MyBookShopApp.security.jwt;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
 @Service
+@AllArgsConstructor
 public class TokenBlacklistService {
 
     private final TokenBlacklistRepository tokenBlacklistRepository;
-
-    public TokenBlacklistService(TokenBlacklistRepository tokenBlacklistRepository) {
-        this.tokenBlacklistRepository = tokenBlacklistRepository;
-    }
 
     public boolean isTokenInBlacklist(String token, LocalDateTime now) {
         TokenBlacklist tokenInBlacklist = tokenBlacklistRepository.findTokenBlacklistByToken(token);

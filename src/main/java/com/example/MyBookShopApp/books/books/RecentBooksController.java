@@ -1,5 +1,6 @@
 package com.example.MyBookShopApp.books.books;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,16 +11,12 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class RecentBooksController {
 
     private final BookService bookService;
     private final Date DATE_FILTER_BEGIN = DateUtils.addMonths(new Date(), -3);
     private final Date DATE_FILTER_END = new Date();
-
-    @Autowired
-    public RecentBooksController(BookService bookService) {
-        this.bookService = bookService;
-    }
 
     @ModelAttribute("booksList")
     public List<BookDto> booksList() {

@@ -4,6 +4,7 @@ import com.example.MyBookShopApp.books.books.BookDto;
 import com.example.MyBookShopApp.books.books.BookService;
 import com.example.MyBookShopApp.books.books.BooksPageDto;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -16,16 +17,11 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
+@AllArgsConstructor
 public class AuthorsController {
 
     private AuthorsService authorsService;
     private BookService bookService;
-
-    @Autowired
-    public AuthorsController(AuthorsService authorsService, BookService bookService) {
-        this.authorsService = authorsService;
-        this.bookService = bookService;
-    }
 
     @ModelAttribute("authorsMap")
     public Map<String, List<Author>> authorsMap(){

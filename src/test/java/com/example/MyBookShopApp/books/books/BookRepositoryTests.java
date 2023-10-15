@@ -2,6 +2,7 @@ package com.example.MyBookShopApp.books.books;
 
 import com.example.MyBookShopApp.author.Author;
 import com.example.MyBookShopApp.author.AuthorRepository;
+import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,16 +17,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @TestPropertySource("/application-test.properties")
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 class BookRepositoryTests {
 
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
-
-    @Autowired
-    BookRepositoryTests(BookRepository bookRepository, AuthorRepository authorRepository) {
-        this.bookRepository = bookRepository;
-        this.authorRepository = authorRepository;
-    }
 
     @Test
     void findBooksByBook2Authors_Author_Name() {

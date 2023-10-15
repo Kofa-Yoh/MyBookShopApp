@@ -7,6 +7,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -19,20 +20,13 @@ import java.time.ZoneId;
 import java.util.logging.Logger;
 
 @Controller
+@AllArgsConstructor
 public class AuthUserController {
 
     private final BookStoreUserRegister userRegister;
     private final BookStoreUserDetailService bookStoreUserDetailService;
     private final JWTUtil jwtUtil;
     private final TokenBlacklistService tokenBlacklistService;
-
-    @Autowired
-    public AuthUserController(BookStoreUserRegister userRegister, BookStoreUserDetailService bookStoreUserDetailService, JWTUtil jwtUtil, TokenBlacklistService tokenBlacklistService) {
-        this.userRegister = userRegister;
-        this.bookStoreUserDetailService = bookStoreUserDetailService;
-        this.jwtUtil = jwtUtil;
-        this.tokenBlacklistService = tokenBlacklistService;
-    }
 
     @GetMapping("/signin")
     public String handleSignIn() {

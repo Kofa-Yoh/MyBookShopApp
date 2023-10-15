@@ -3,19 +3,18 @@ package com.example.MyBookShopApp.books.reviews;
 import com.example.MyBookShopApp.books.books.Book;
 import com.example.MyBookShopApp.commons.utils.MappingUtils;
 import com.example.MyBookShopApp.security.BookStoreUser;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class BookReviewService {
 
     private final BookReviewRepository bookReviewRepository;
-
-    public BookReviewService(BookReviewRepository bookReviewRepository) {
-        this.bookReviewRepository = bookReviewRepository;
-    }
 
     public BookReview getBookReviewById(Integer id) {
         return bookReviewRepository.findBookReviewById(id);

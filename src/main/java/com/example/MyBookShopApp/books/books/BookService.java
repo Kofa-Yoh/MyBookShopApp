@@ -4,6 +4,7 @@ import com.example.MyBookShopApp.commons.utils.MappingUtils;
 import com.example.MyBookShopApp.errs.BookstoreApiWrongParameterException;
 import com.example.MyBookShopApp.security.BookStoreUserDetails;
 import com.example.MyBookShopApp.security.BookStoreUserRegister;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,16 +16,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class BookService {
 
-    private BookRepository bookRepository;
+    private final BookRepository bookRepository;
     private final BookStoreUserRegister bookStoreUserRegister;
-
-    @Autowired
-    public BookService(BookRepository bookRepository, BookStoreUserRegister bookStoreUserRegister) {
-        this.bookRepository = bookRepository;
-        this.bookStoreUserRegister = bookStoreUserRegister;
-    }
 
     public List<BookDto> getBooksData() {
         return bookRepository.findAll()

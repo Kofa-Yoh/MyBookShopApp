@@ -1,5 +1,6 @@
 package com.example.MyBookShopApp.author;
 
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,16 +10,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class AuthorsService {
 
     private final AuthorRepository authorRepository;
 
     @Autowired
     private ModelMapper modelMapper;
-
-    public AuthorsService(AuthorRepository authorRepository) {
-        this.authorRepository = authorRepository;
-    }
 
     public Map<String, List<AuthorDto>> getAuthorsMap() {
         return authorRepository.findAll()

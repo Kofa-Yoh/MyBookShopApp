@@ -1,6 +1,7 @@
 package com.example.MyBookShopApp.security;
 
 import io.jsonwebtoken.Jwts;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestPropertySource("/application-test.properties")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class BookStoreUserRegisterTestsAuth {
 
     @Value("${auth.secret}")
@@ -24,12 +26,6 @@ class BookStoreUserRegisterTestsAuth {
     private final BookStoreUserRegister userRegister;
     private ContactConfirmationPayload rightPayload;
     private ContactConfirmationPayload wrongPayload;
-
-    @Autowired
-    BookStoreUserRegisterTestsAuth(BookStoreUserRepository bookStoreUserRepository, BookStoreUserRegister userRegister) {
-        this.bookStoreUserRepository = bookStoreUserRepository;
-        this.userRegister = userRegister;
-    }
 
     @BeforeEach
     void setUp() {

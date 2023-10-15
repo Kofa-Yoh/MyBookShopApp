@@ -1,20 +1,18 @@
 package com.example.MyBookShopApp.selenium;
 
+import lombok.AllArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+@AllArgsConstructor
 public class MainPage {
 
-    private String url = "http://localhost:8089";
+    protected static final String URL = "http://localhost:8089";
     private ChromeDriver driver;
 
-    public MainPage(ChromeDriver driver) {
-        this.driver = driver;
-    }
-
     public MainPage callPage() {
-        driver.get(url);
+        driver.get(URL);
         return this;
     }
 
@@ -33,9 +31,5 @@ public class MainPage {
         WebElement element = driver.findElement(By.id("search"));
         element.submit();
         return this;
-    }
-
-    public String getUrl() {
-        return url;
     }
 }

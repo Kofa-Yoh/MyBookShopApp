@@ -4,6 +4,7 @@ import com.example.MyBookShopApp.books.books.Book;
 import com.example.MyBookShopApp.books.books.BookRepository;
 import com.example.MyBookShopApp.security.BookStoreUser;
 import com.example.MyBookShopApp.security.BookStoreUserRepository;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource("/application-test.properties")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class BookStatusControllerTests {
 
     private final MockMvc mockMvc;
@@ -39,11 +41,6 @@ class BookStatusControllerTests {
     private BookStoreUserRepository bookStoreUserRepository;
     @Autowired
     private Book2UserRepository book2UserRepository;
-
-    @Autowired
-    BookStatusControllerTests(MockMvc mockMvc) {
-        this.mockMvc = mockMvc;
-    }
 
     @BeforeEach
     void setUp() {

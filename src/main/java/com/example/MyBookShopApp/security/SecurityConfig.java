@@ -4,6 +4,7 @@ import com.example.MyBookShopApp.security.jwt.JWTRequestFilter;
 import com.example.MyBookShopApp.security.jwt.JWTUtil;
 import com.example.MyBookShopApp.security.oauth2.OAuth2AuthenticationFailureHandler;
 import com.example.MyBookShopApp.security.oauth2.OAuthLoginSuccessHandler;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,17 +26,12 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final BookStoreUserDetailService bookStoreUserDetailService;
 
     private final JWTUtil jwtUtil;
-
-    @Autowired
-    public SecurityConfig(BookStoreUserDetailService bookStoreUserDetailService, JWTUtil jwtUtil) {
-        this.bookStoreUserDetailService = bookStoreUserDetailService;
-        this.jwtUtil = jwtUtil;
-    }
 
     @Bean
     PasswordEncoder getPasswordEncoder() {
@@ -47,9 +43,17 @@ public class SecurityConfig {
         return new JWTRequestFilter(bookStoreUserDetailService, jwtUtil);
     }
 
+    @Autowired
+    private OAuthLoginSuccessHandler oAuthLoginSuccessHandler;
+
+    @Bean
+    public AuthenticationFailureHandler authenticationFailureHandler() {
+        return new OAuth2AuthenticationFailureHandler();
+    }
+
     @Bean
     public AccessDeniedExceptionFilter accessFilter() {
-        return  new AccessDeniedExceptionFilter();
+        return new AccessDeniedExceptionFilter();
     }
 
     @Bean
@@ -63,14 +67,6 @@ public class SecurityConfig {
         authProvider.setUserDetailsService(bookStoreUserDetailService);
         authProvider.setPasswordEncoder(getPasswordEncoder());
         return authProvider;
-    }
-
-    @Autowired
-    private OAuthLoginSuccessHandler oAuthLoginSuccessHandler;
-
-    @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler() {
-        return new OAuth2AuthenticationFailureHandler();
     }
 
     @Bean

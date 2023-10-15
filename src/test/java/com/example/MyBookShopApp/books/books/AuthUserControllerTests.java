@@ -1,6 +1,7 @@
 package com.example.MyBookShopApp.books.books;
 
 import com.example.MyBookShopApp.security.RegistrationForm;
+import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,14 +22,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource("/application-test.properties")
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 class AuthUserControllerTests {
 
     private final MockMvc mockMvc;
-
-    @Autowired
-    AuthUserControllerTests(MockMvc mockMvc) {
-        this.mockMvc = mockMvc;
-    }
 
     @Test
     public void mainPageAccessTest() throws Exception {

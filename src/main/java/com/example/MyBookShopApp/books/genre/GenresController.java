@@ -2,6 +2,7 @@ package com.example.MyBookShopApp.books.genre;
 
 import com.example.MyBookShopApp.books.books.BookService;
 import com.example.MyBookShopApp.books.books.BooksPageDto;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,16 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@AllArgsConstructor
 public class GenresController {
 
     private final GenreService genreService;
 
     private final BookService bookService;
-
-    public GenresController(GenreService genreService, BookService bookService) {
-        this.genreService = genreService;
-        this.bookService = bookService;
-    }
 
     @ModelAttribute("genresList")
     public List<Genre> genresList() {

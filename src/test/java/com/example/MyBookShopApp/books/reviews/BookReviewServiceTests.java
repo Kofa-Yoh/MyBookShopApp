@@ -1,6 +1,7 @@
 package com.example.MyBookShopApp.books.reviews;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,15 +14,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @TestPropertySource("/application-test.properties")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class BookReviewServiceTests {
 
     private final BookReviewService bookReviewService;
     private BookReview bookReview;
-
-    @Autowired
-    BookReviewServiceTests(BookReviewService bookReviewService) {
-        this.bookReviewService = bookReviewService;
-    }
 
     @BeforeEach
     void setUp() {

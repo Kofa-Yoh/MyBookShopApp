@@ -8,6 +8,7 @@ import com.example.MyBookShopApp.security.BookStoreUserDetails;
 import com.example.MyBookShopApp.security.BookStoreUserRegister;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/books")
+@AllArgsConstructor
 public class BookStatusController {
 
     private final BookRepository bookRepository;
@@ -28,12 +30,6 @@ public class BookStatusController {
     private final BookStoreUserRegister bookStoreUserRegister;
 
     private final Book2UserService book2UserService;
-
-    public BookStatusController(BookRepository bookRepository, BookStoreUserRegister bookStoreUserRegister, Book2UserService book2UserService) {
-        this.bookRepository = bookRepository;
-        this.bookStoreUserRegister = bookStoreUserRegister;
-        this.book2UserService = book2UserService;
-    }
 
     @PostMapping("/changeBookStatus/{slugs}/{status}")
     @ResponseBody

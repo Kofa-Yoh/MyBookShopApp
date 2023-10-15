@@ -12,6 +12,7 @@ import com.example.MyBookShopApp.books.tags.TagService;
 import com.example.MyBookShopApp.security.BookStoreUserDetails;
 import com.example.MyBookShopApp.security.BookStoreUserRegister;
 import com.example.MyBookShopApp.commons.utils.MappingUtils;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -30,6 +31,7 @@ import java.util.logging.Logger;
 
 @Controller
 @RequestMapping("/books")
+@AllArgsConstructor
 public class BooksController {
 
     private final BookRepository bookRepository;
@@ -39,17 +41,6 @@ public class BooksController {
     private final BookAssessmentService bookAssessmentService;
     private final BookStoreUserRegister bookStoreUserRegister;
     private final BookReviewService bookReviewService;
-
-    @Autowired
-    public BooksController(BookRepository bookRepository, ResourceStorage storage, AuthorsService authorsService, TagService tagService, BookAssessmentService bookAssessmentService, BookStoreUserRegister bookStoreUserRegister, BookReviewService bookReviewService) {
-        this.bookRepository = bookRepository;
-        this.storage = storage;
-        this.authorsService = authorsService;
-        this.tagService = tagService;
-        this.bookAssessmentService = bookAssessmentService;
-        this.bookStoreUserRegister = bookStoreUserRegister;
-        this.bookReviewService = bookReviewService;
-    }
 
     @GetMapping("/{slug}")
     public String bookPage(@PathVariable("slug") String slug, Model model) {

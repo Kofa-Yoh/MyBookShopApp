@@ -1,14 +1,13 @@
 package com.example.MyBookShopApp.books.bookfiles;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public enum BookFileType {
 
     TXT(".txt"), PDF(".pdf"), EPUB(".epub"), FB2(".fb2");
 
     private final String fileExtensionString;
-
-    BookFileType(String fileExtensionString) {
-        this.fileExtensionString = fileExtensionString;
-    }
 
     public static String getFileExtensionStringByTypeId(Integer typeId) {
        switch (typeId){

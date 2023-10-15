@@ -4,6 +4,7 @@ import com.example.MyBookShopApp.books.books.Book;
 import com.example.MyBookShopApp.books.books.BookRepository;
 import com.example.MyBookShopApp.security.BookStoreUserDetails;
 import com.example.MyBookShopApp.security.BookStoreUserRegister;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/books")
+@AllArgsConstructor
 public class BookAssessmentController {
 
     private final BookRepository bookRepository;
@@ -19,12 +21,6 @@ public class BookAssessmentController {
     private final BookStoreUserRegister bookStoreUserRegister;
 
     private final BookAssessmentService bookAssessmentService;
-
-    public BookAssessmentController(BookRepository bookRepository, BookStoreUserRegister bookStoreUserRegister, BookAssessmentService bookAssessmentService) {
-        this.bookRepository = bookRepository;
-        this.bookStoreUserRegister = bookStoreUserRegister;
-        this.bookAssessmentService = bookAssessmentService;
-    }
 
     @PostMapping("/rateBook")
     @ResponseBody

@@ -2,6 +2,7 @@ package com.example.MyBookShopApp.security;
 
 import com.example.MyBookShopApp.commons.utils.MappingUtils;
 import com.example.MyBookShopApp.security.jwt.JWTUtil;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class BookStoreUserRegister {
 
     private final BookStoreUserRepository bookStoreUserRepository;
@@ -19,18 +21,6 @@ public class BookStoreUserRegister {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
-
-    @Autowired
-    public BookStoreUserRegister(BookStoreUserRepository bookStoreUserRepository,
-                                 PasswordEncoder passwordEncoder,
-                                 AuthenticationManager authenticationManager,
-                                 BookStoreUserDetailService bookStoreUserDetailService, JWTUtil jwtUtil) {
-        this.bookStoreUserRepository = bookStoreUserRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
-        this.bookStoreUserDetailService = bookStoreUserDetailService;
-        this.jwtUtil = jwtUtil;
-    }
 
     public BookStoreUser registerNewUser(RegistrationForm registrationForm) {
         BookStoreUser bookStoreUserByEmail = bookStoreUserRepository.findBookStoreUserByEmail(registrationForm.getEmail());

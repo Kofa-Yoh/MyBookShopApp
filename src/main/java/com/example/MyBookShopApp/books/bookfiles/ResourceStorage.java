@@ -2,6 +2,7 @@ package com.example.MyBookShopApp.books.bookfiles;
 
 import com.example.MyBookShopApp.books.bookfiles.BookFile;
 import com.example.MyBookShopApp.books.bookfiles.BookFileRepository;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +19,7 @@ import java.nio.file.Paths;
 import java.util.logging.Logger;
 
 @Service
+@RequiredArgsConstructor
 public class ResourceStorage {
 
     @Value("${upload.path}")
@@ -27,11 +29,6 @@ public class ResourceStorage {
     String downloadPath;
 
     private final BookFileRepository bookFileRepository;
-
-    @Autowired
-    public ResourceStorage(BookFileRepository bookFileRepository) {
-        this.bookFileRepository = bookFileRepository;
-    }
 
     public String saveNewBookImage(MultipartFile file, String slug) throws IOException {
         String resourceURI = null;

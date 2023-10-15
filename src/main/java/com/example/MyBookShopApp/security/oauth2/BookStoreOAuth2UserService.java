@@ -4,6 +4,7 @@ import com.example.MyBookShopApp.security.AuthenticationType;
 import com.example.MyBookShopApp.security.BookStoreUser;
 import com.example.MyBookShopApp.security.BookStoreUserDetails;
 import com.example.MyBookShopApp.security.BookStoreUserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -11,13 +12,10 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class BookStoreOAuth2UserService extends DefaultOAuth2UserService {
 
     private final BookStoreUserRepository bookStoreUserRepository;
-
-    public BookStoreOAuth2UserService(BookStoreUserRepository bookStoreUserRepository) {
-        this.bookStoreUserRepository = bookStoreUserRepository;
-    }
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {

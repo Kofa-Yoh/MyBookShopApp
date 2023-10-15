@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,16 +19,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+@AllArgsConstructor
 public class JWTRequestFilter extends OncePerRequestFilter {
 
     private final BookStoreUserDetailService bookStoreUserDetailService;
     private final JWTUtil jwtUtil;
-
-    @Autowired
-    public JWTRequestFilter(BookStoreUserDetailService bookStoreUserDetailService, JWTUtil jwtUtil) {
-        this.bookStoreUserDetailService = bookStoreUserDetailService;
-        this.jwtUtil = jwtUtil;
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

@@ -1,5 +1,6 @@
 package com.example.MyBookShopApp.security;
 
+import lombok.RequiredArgsConstructor;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class BookStoreUserRegisterTests {
 
     private final BookStoreUserRegister userRegister;
@@ -21,12 +23,6 @@ class BookStoreUserRegisterTests {
 
     @MockBean
     private BookStoreUserRepository bookStoreUserRepositoryMock;
-
-    @Autowired
-    public BookStoreUserRegisterTests(BookStoreUserRegister userRegister, PasswordEncoder passwordEncoder) {
-        this.userRegister = userRegister;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @BeforeEach
     void setUp() {

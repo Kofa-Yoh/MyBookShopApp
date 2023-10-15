@@ -5,6 +5,7 @@ import com.example.MyBookShopApp.books.books.BookDto;
 import com.example.MyBookShopApp.commons.utils.MappingUtils;
 import com.example.MyBookShopApp.security.BookStoreUser;
 import com.example.MyBookShopApp.security.BookStoreUserRegister;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,15 +15,11 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class Book2UserService {
 
     private final Book2UserRepository book2UserRepository;
     private final Book2UserTypeRepository book2UserTypeRepository;
-
-    public Book2UserService(Book2UserRepository book2UserRepository, BookStoreUserRegister bookStoreUserRegister, Book2UserTypeRepository book2UserTypeRepository) {
-        this.book2UserRepository = book2UserRepository;
-        this.book2UserTypeRepository = book2UserTypeRepository;
-    }
 
     public List<BookDto> getBooksByUserAndLinkType(BookStoreUser user, Book2UserTypeDto linkType) {
         if (user != null) {

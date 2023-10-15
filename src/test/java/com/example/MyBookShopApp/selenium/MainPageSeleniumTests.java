@@ -41,9 +41,9 @@ class MainPageSeleniumTests {
     public void testUserAuthAndPagesAccess() throws InterruptedException {
         MainPage mainPage = new MainPage(driver);
 
-        String signInPageUrl = mainPage.getUrl() + "/signin";
-        String myPageUrl = mainPage.getUrl() + "/my";
-        String profilePageUrl = mainPage.getUrl() + "/profile";
+        String signInPageUrl = mainPage.URL + "/signin";
+        String myPageUrl = mainPage.URL + "/my";
+        String profilePageUrl = mainPage.URL + "/profile";
 
         String userEmail = "1@gmail.com";
         String rightPassword = "123";
@@ -117,7 +117,7 @@ class MainPageSeleniumTests {
             logger.info(driver.getCurrentUrl());
             this.pause();
             // Main page
-            if (link.equals(mainPage.getUrl() + "/")) {
+            if (link.equals(mainPage.URL + "/")) {
                 // Tag page
                 driver.findElement(By.cssSelector(".Tag_lg a")).click();
                 logger.info(driver.getCurrentUrl());

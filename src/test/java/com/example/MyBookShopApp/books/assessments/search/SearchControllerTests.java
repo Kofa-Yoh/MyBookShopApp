@@ -1,5 +1,6 @@
-package com.example.MyBookShopApp.books.search;
+package com.example.MyBookShopApp.books.assessments.search;
 
+import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,14 +15,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource("/application-test.properties")
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 class SearchControllerTests {
 
     private final MockMvc mockMvc;
-
-    @Autowired
-    SearchControllerTests(MockMvc mockMvc) {
-        this.mockMvc = mockMvc;
-    }
 
     @Test
     public void testSearchQuery() throws Exception {

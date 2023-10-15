@@ -3,6 +3,7 @@ package com.example.MyBookShopApp.security.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,17 +16,13 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
+@RequiredArgsConstructor
 public class JWTUtil {
 
     @Value("${auth.secret}")
     private String secret;
 
     private final TokenBlacklistService blacklistService;
-
-    @Autowired
-    public JWTUtil(TokenBlacklistService blacklistService) {
-        this.blacklistService = blacklistService;
-    }
 
     private String createToken(Map<String, Object> claims, String username) {
         return Jwts
