@@ -2,6 +2,8 @@ package com.example.MyBookShopApp.security;
 
 import com.example.MyBookShopApp.security.jwt.JWTUtil;
 import com.example.MyBookShopApp.security.jwt.TokenBlacklistService;
+import com.example.MyBookShopApp.security.verification.SmsCode;
+import com.example.MyBookShopApp.security.verification.SmsService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,6 +11,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,10 +28,15 @@ import java.util.logging.Logger;
 @AllArgsConstructor
 public class AuthUserController {
 
+    @Value("${appEmail.email}")
+    private static String email;
+
     private final BookStoreUserRegister userRegister;
     private final BookStoreUserDetailService bookStoreUserDetailService;
     private final JWTUtil jwtUtil;
     private final TokenBlacklistService tokenBlacklistService;
+    private final SmsService smsService;
+    private final JavaMailSender javaMailSender;
 
     @GetMapping("/signin")
     public String handleSignIn() {
@@ -43,6 +53,24 @@ public class AuthUserController {
     @ResponseBody
     public ContactConfirmationResponse handleRequestContactConfirmation(@RequestBody ContactConfirmationPayload payload) {
         ContactConfirmationResponse response = new ContactConfirmationResponse();
+        String smsCodeString = smsService.sendSecretCodeSms(payload.getContact());
+        smsService.saveNewCode(new SmsCode(smsCodeString, 60)); // expires in 1 min
+        response.setResult("true");
+        return response;
+    }
+
+    @PostMapping("/requestEmailConfirmation")
+    @ResponseBody
+    public ContactConfirmationResponse handleRequestEmailConfirmation(@RequestBody ContactConfirmationPayload payload) {
+        ContactConfirmationResponse response = new ContactConfirmationResponse();
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(email);
+        message.setTo(payload.getContact());
+        SmsCode smsCode = new SmsCode(smsService.generateCode(), 300); // 5 min
+        smsService.saveNewCode(smsCode);
+        message.setSubject("Bookstore email verification");
+        message.setText("Verification code is: " + smsCode.getCode());
+        javaMailSender.send(message);
         response.setResult("true");
         return response;
     }
@@ -51,7 +79,9 @@ public class AuthUserController {
     @ResponseBody
     public ContactConfirmationResponse handleApproveContact(@RequestBody ContactConfirmationPayload payload) {
         ContactConfirmationResponse response = new ContactConfirmationResponse();
-        response.setResult("true");
+        if (smsService.verifyCode(payload.getCode())) {
+            response.setResult("true");
+        }
         return response;
     }
 
@@ -66,11 +96,24 @@ public class AuthUserController {
     @ResponseBody
     public ContactConfirmationResponse handleLogin(@RequestBody ContactConfirmationPayload payload,
                                                    HttpServletResponse httpServletResponse) {
-//        ContactConfirmationResponse response = userRegister.login(payload);
         ContactConfirmationResponse loginResponse = userRegister.jwtLogin(payload);
         Cookie cookie = new Cookie("token", loginResponse.getResult());
         httpServletResponse.addCookie(cookie);
         return loginResponse;
+    }
+
+    @PostMapping("/login-by-phone-number")
+    @ResponseBody
+    public ContactConfirmationResponse handleLoginByPhoneNumber(@RequestBody ContactConfirmationPayload payload,
+                                                   HttpServletResponse httpServletResponse) {
+        if (smsService.verifyCode(payload.getCode())) {
+            ContactConfirmationResponse loginResponse = userRegister.jwtLoginByPhoneNumber(payload);
+            Cookie cookie = new Cookie("token", loginResponse.getResult());
+            httpServletResponse.addCookie(cookie);
+            return loginResponse;
+        } else {
+            return null;
+        }
     }
 
     @GetMapping("/my")

@@ -33,3 +33,4 @@ build/
 .vscode/
 /book-covers/
 /book-files/
+/src/main/resources/hidden_properties.txt
