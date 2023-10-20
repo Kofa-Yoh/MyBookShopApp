@@ -3,12 +3,12 @@ package com.example.MyBookShopApp.security;
 import com.example.MyBookShopApp.commons.utils.MappingUtils;
 import com.example.MyBookShopApp.security.jwt.JWTUtil;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +24,9 @@ public class BookStoreUserRegister {
 
     public BookStoreUser registerNewUser(RegistrationForm registrationForm) {
         BookStoreUser bookStoreUserByEmail = bookStoreUserRepository.findBookStoreUserByEmail(registrationForm.getEmail());
-        if (bookStoreUserByEmail == null) {
+        BookStoreUser bookStoreUserByPhone = bookStoreUserRepository.findBookStoreUserByPhone(registrationForm.getPhone());
+
+        if (bookStoreUserByEmail == null && bookStoreUserByPhone == null) {
             BookStoreUser user = new BookStoreUser();
             user.setName(registrationForm.getName());
             user.setEmail(registrationForm.getEmail());
@@ -33,15 +35,22 @@ public class BookStoreUserRegister {
             user.setAuthType(AuthenticationType.DATABASE);
             bookStoreUserRepository.save(user);
             return user;
-        } else if (bookStoreUserByEmail.getAuthType() != AuthenticationType.DATABASE) {
+        } else if (bookStoreUserByEmail != null && bookStoreUserByEmail.getAuthType() != AuthenticationType.DATABASE) {
             bookStoreUserByEmail.setName(registrationForm.getName());
             bookStoreUserByEmail.setPhone(registrationForm.getPhone());
             bookStoreUserByEmail.setPassword(passwordEncoder.encode(registrationForm.getPass()));
             bookStoreUserByEmail.setAuthType(AuthenticationType.DATABASE);
             bookStoreUserRepository.save(bookStoreUserByEmail);
             return bookStoreUserByEmail;
+        } else if (bookStoreUserByPhone != null && bookStoreUserByPhone.getAuthType() != AuthenticationType.DATABASE) {
+            bookStoreUserByPhone.setName(registrationForm.getName());
+            bookStoreUserByPhone.setPhone(registrationForm.getPhone());
+            bookStoreUserByPhone.setPassword(passwordEncoder.encode(registrationForm.getPass()));
+            bookStoreUserByPhone.setAuthType(AuthenticationType.DATABASE);
+            bookStoreUserRepository.save(bookStoreUserByPhone);
+            return bookStoreUserByPhone;
         }
-        return bookStoreUserByEmail;
+        return bookStoreUserByEmail == null ? bookStoreUserByPhone : bookStoreUserByEmail;
     }
 
     public ContactConfirmationResponse login(ContactConfirmationPayload payload) {
@@ -61,6 +70,18 @@ public class BookStoreUserRegister {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(payload.getContact(),
                 payload.getCode()));
         BookStoreUserDetails userDetails = (BookStoreUserDetails) bookStoreUserDetailService.loadUserByUsername(payload.getContact());
+        String jwtToken = jwtUtil.generateToken(userDetails);
+        ContactConfirmationResponse response = new ContactConfirmationResponse();
+        response.setResult(jwtToken);
+        return response;
+    }
+
+    public ContactConfirmationResponse jwtLoginByPhoneNumber(ContactConfirmationPayload payload) {
+        RegistrationForm registrationForm = new RegistrationForm();
+        registrationForm.setPhone(payload.getContact());
+        registrationForm.setPass(payload.getCode());
+        this.registerNewUser(registrationForm);
+        UserDetails userDetails = bookStoreUserDetailService.loadUserByUsername(payload.getContact());
         String jwtToken = jwtUtil.generateToken(userDetails);
         ContactConfirmationResponse response = new ContactConfirmationResponse();
         response.setResult(jwtToken);
