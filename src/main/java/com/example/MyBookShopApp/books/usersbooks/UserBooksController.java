@@ -13,7 +13,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.view.RedirectView;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +29,7 @@ public class UserBooksController {
     private final BookRepository bookRepository;
     private final BookStoreUserRegister bookStoreUserRegister;
     private final Book2UserService book2UserService;
+    private final PaymentService paymentService;
 
     @GetMapping("/cart")
     public String handleCartRequest(@CookieValue(value = "cartContents", required = false) String cartContents,
@@ -85,6 +88,13 @@ public class UserBooksController {
                 .collect(Collectors.joining("\',\'", "\'", "\'")));
 
         return "postponed";
+    }
+
+    @GetMapping("/pay")
+    public RedirectView handlePay(@CookieValue(value = "cartContents", required = false) String cartContents) throws NoSuchAlgorithmException {
+        List<BookDto> booksList = getUserBooksList("cart", cartContents);
+        String paymentUrl = paymentService.getPaymentUrl(booksList);
+        return new RedirectView(paymentUrl);
     }
 
     private String getNewCookieContent(List<BookDto> booksList) {
