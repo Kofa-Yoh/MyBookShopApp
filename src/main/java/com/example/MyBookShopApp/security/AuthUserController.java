@@ -49,6 +49,23 @@ public class AuthUserController {
         return "signup";
     }
 
+    @PostMapping("/checkContact")
+    @ResponseBody
+    public ContactConfirmationResponse handleCheckContact(@RequestBody ContactConfirmationPayload payload) {
+        ContactConfirmationResponse response = new ContactConfirmationResponse();
+        try {
+            UserDetails userDetails = bookStoreUserDetailService.loadUserByUsername(payload.getContact());
+            if (userDetails == null) {
+                response.setResult("false");
+            } else {
+                response.setResult("true");
+            }
+        } catch (Exception e) {
+            response.setResult("false");
+        }
+        return response;
+    }
+
     @PostMapping("/requestContactConfirmation")
     @ResponseBody
     public ContactConfirmationResponse handleRequestContactConfirmation(@RequestBody ContactConfirmationPayload payload) {
