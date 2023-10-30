@@ -10,14 +10,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -57,8 +58,21 @@ public class AuthUserController {
             UserDetails userDetails = bookStoreUserDetailService.loadUserByUsername(payload.getContact());
             if (userDetails == null) {
                 response.setResult("false");
+                return response;
             } else {
-                response.setResult("true");
+                BookStoreUserDetails currentUser = userRegister.getCurrentUser();
+                if (currentUser != null) {
+                    if (userDetails == currentUser) {
+                        response.setResult("false");
+                        return response;
+                    } else {
+                        response.setResult("true");
+                        return response;
+                    }
+                } else {
+                    response.setResult("true");
+                    return response;
+                }
             }
         } catch (Exception e) {
             response.setResult("false");
@@ -99,6 +113,7 @@ public class AuthUserController {
         if (smsService.verifyCode(payload.getCode())) {
             response.setResult("true");
         }
+        response.setResult("true");
         return response;
     }
 
@@ -122,7 +137,7 @@ public class AuthUserController {
     @PostMapping("/login-by-phone-number")
     @ResponseBody
     public ContactConfirmationResponse handleLoginByPhoneNumber(@RequestBody ContactConfirmationPayload payload,
-                                                   HttpServletResponse httpServletResponse) {
+                                                                HttpServletResponse httpServletResponse) {
         if (smsService.verifyCode(payload.getCode())) {
             ContactConfirmationResponse loginResponse = userRegister.jwtLoginByPhoneNumber(payload);
             Cookie cookie = new Cookie("token", loginResponse.getResult());
@@ -136,7 +151,6 @@ public class AuthUserController {
     @GetMapping("/my")
     public String handleMy(Model model) {
         model.addAttribute("curUsr", userRegister.getCurrentUserDto());
-
         return "my";
     }
 
@@ -144,6 +158,35 @@ public class AuthUserController {
     public String handleProfile(Model model) {
         model.addAttribute("curUsr", userRegister.getCurrentUserDto());
         return "profile";
+    }
+
+    @ModelAttribute("savingResult")
+    public ProfileSavingResults savingResult() {
+        ProfileSavingResults results = new ProfileSavingResults();
+        results.setResult(false);
+        return results;
+    }
+
+    @PostMapping("/saveProfile")
+    public String handleProfileSaving(ProfileForm payload,
+                                      HttpServletResponse httpServletResponse,
+                                      RedirectAttributes redirectAttributes) {
+        ProfileSavingResults results = userRegister.changeUser(payload);
+        if (results != null && results.getUser() != null) {
+            ContactConfirmationResponse token = new ContactConfirmationResponse();
+            if (results.getUser().getEmail() != null && !results.getUser().getEmail().equals("")) {
+                token = userRegister.jwtLogin(
+                        new ContactConfirmationPayload(results.getUser().getEmail(), ""));
+            } else if (results.getUser().getPhone() != null && !results.getUser().getPhone().equals("")) {
+                token = userRegister.jwtLoginByPhoneNumber(
+                        new ContactConfirmationPayload(results.getUser().getPhone(), ""));
+            }
+            Cookie cookie = new Cookie("token", token.getResult());
+            cookie.setPath("/");
+            httpServletResponse.addCookie(cookie);
+        }
+        redirectAttributes.addFlashAttribute("savingResult", results);
+        return "redirect:/profile";
     }
 
     @GetMapping("/user_logout")
