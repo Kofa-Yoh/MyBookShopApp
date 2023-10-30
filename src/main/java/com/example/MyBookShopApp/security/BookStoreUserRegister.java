@@ -67,8 +67,6 @@ public class BookStoreUserRegister {
     }
 
     public ContactConfirmationResponse jwtLogin(ContactConfirmationPayload payload) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(payload.getContact(),
-                payload.getCode()));
         BookStoreUserDetails userDetails = (BookStoreUserDetails) bookStoreUserDetailService.loadUserByUsername(payload.getContact());
         String jwtToken = jwtUtil.generateToken(userDetails);
         ContactConfirmationResponse response = new ContactConfirmationResponse();
@@ -107,6 +105,54 @@ public class BookStoreUserRegister {
             return (BookStoreUserDetails) authentication.getPrincipal();
         } else {
             return null;
+        }
+    }
+
+    public ProfileSavingResults changeUser(ProfileForm payload) {
+        ProfileSavingResults result = new ProfileSavingResults();
+        result.setResult(false);
+        Boolean isChanged = false;
+        BookStoreUserDetails bookStoreUserDetails = getCurrentUser();
+        BookStoreUser user;
+        if (bookStoreUserDetails == null) {
+            result.setErrors("Current user is not defined");
+            return result;
+        } else {
+            user = bookStoreUserDetails.getBookStoreUser();
+        }
+        if (payload.getPassword() != null && !payload.getPassword().equals("")) {
+            String newPassword = payload.getPassword().trim();
+            if (!newPassword.equals(payload.getPasswordReply().trim())) {
+                result.setErrors("Entered passwords are not equal");
+                return result;
+            } else {
+                user.setPassword(newPassword);
+                isChanged = true;
+            }
+        }
+        if (payload.getName() != null && !payload.getName().trim().equals("") && !payload.getName().equals(user.getName())) {
+            user.setName(payload.getName().trim());
+            isChanged = true;
+        }
+        if (payload.getMail() != null && !payload.getMail().equals("") && !payload.getMail().equals(user.getEmail())) {
+            user.setEmail(payload.getMail());
+            isChanged = true;
+        }
+        if (payload.getPhone() != null && !payload.getPhone().equals("") && !payload.getPhone().equals(user.getPhone())) {
+            user.setPhone(payload.getPhone());
+            isChanged = true;
+        }
+
+        if (isChanged) {
+            user.setAuthType(AuthenticationType.DATABASE);
+            BookStoreUser savedUser = bookStoreUserRepository.save(user);
+            result.setResult(true);
+            result.setUser(savedUser);
+            return result;
+        } else {
+            result.setErrors("Data wasn't changed");
+            result.setUser(user);
+            return result;
         }
     }
 }

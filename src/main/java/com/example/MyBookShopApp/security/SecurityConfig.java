@@ -89,7 +89,7 @@ public class SecurityConfig {
                 .oauth2Client(withDefaults());
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterAfter(filter(), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(accessFilter(), BasicAuthenticationFilter.class);
+        http.addFilterAfter(accessFilter(), BasicAuthenticationFilter.class);
         return http.build();
     }
 }
