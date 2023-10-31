@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @AllArgsConstructor
 public class BookStoreUserRegister {
@@ -154,5 +156,9 @@ public class BookStoreUserRegister {
             result.setUser(user);
             return result;
         }
+    }
+
+    public BookStoreUser findBookStoreUserByHash(String hash) {
+        return bookStoreUserRepository.findBookStoreUserByHash(UUID.fromString(hash));
     }
 }

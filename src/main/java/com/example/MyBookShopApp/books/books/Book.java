@@ -8,6 +8,7 @@ import com.example.MyBookShopApp.books.genre.Genre;
 import com.example.MyBookShopApp.books.reviews.BookReview;
 import com.example.MyBookShopApp.books.tags.Tag;
 import com.example.MyBookShopApp.books.usersbooks.Book2User;
+import com.example.MyBookShopApp.user_transactions.Transaction;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -98,6 +99,10 @@ public class Book {
     @OneToMany(mappedBy = "book")
     @JsonIgnore
     private List<BookAssessment> bookRate = new ArrayList<>();
+
+    @OneToMany(mappedBy = "book")
+    @JsonIgnore
+    private List<Transaction> transactions = new ArrayList<>();
 
     @JsonProperty(value = "discountPercent")
     public Integer getDiscountPercent() {
