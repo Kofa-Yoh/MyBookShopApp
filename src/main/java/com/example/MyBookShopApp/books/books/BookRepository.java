@@ -48,7 +48,7 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 
     Book findBookBySlug(String slug);
 
-    List<Book> findBooksBySlugIn(ArrayList<String> slugs);
+    List<Book> findBooksBySlugIn(List<String> slugs);
 
     @Query("from Book b" +
             " left join b.book2users s" +
