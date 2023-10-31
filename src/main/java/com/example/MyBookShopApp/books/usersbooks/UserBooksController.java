@@ -7,6 +7,8 @@ import com.example.MyBookShopApp.security.BookStoreUser;
 import com.example.MyBookShopApp.security.BookStoreUserDetails;
 import com.example.MyBookShopApp.security.BookStoreUserRegister;
 import com.example.MyBookShopApp.commons.utils.MappingUtils;
+import com.example.MyBookShopApp.user_transactions.PaymentService;
+import com.example.MyBookShopApp.user_transactions.TransuctionResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -89,13 +91,51 @@ public class UserBooksController {
     }
 
     @GetMapping("/pay")
-    public RedirectView handlePay(@CookieValue(value = "cartContents", required = false) String cartContents) throws NoSuchAlgorithmException {
-        List<BookDto> booksList = getUserBooksList("cart", cartContents);
-        String paymentUrl = paymentService.getPaymentUrl(booksList);
-        return new RedirectView(paymentUrl);
+    public RedirectView handlePay(HttpServletRequest request,
+                                  HttpServletResponse response) {
+        String cartUrl = "/books/cart";
+
+        BookStoreUserDetails currentUser = bookStoreUserRegister.getCurrentUser();
+        if (currentUser != null) {
+            List<Book> booksList = getUserBooksList("cart", "");
+            if (booksList.size() == 0) {
+                return new RedirectView(cartUrl);
+            }
+            BookStoreUser user = currentUser.getBookStoreUser();
+            TransuctionResponse result = paymentService.buyingBooksByUser(user, booksList);
+            CookiesContents cookiesContents = book2UserService.changeBook2UserStatus(booksList, user, "PAID");
+            book2UserService.changeCookiesContents(cookiesContents, response);
+            return new RedirectView(cartUrl);
+        } else {
+            Map<String, String> cookies = getCookiesList(request.getCookies());
+
+            String cartContents = cookies.get("cartContents");
+            if (cartContents == null || cartContents.equals("")) {
+                return new RedirectView(cartUrl);
+            }
+
+            List<Book> booksList = getUserBooksList("cart", cartContents);
+            if (booksList.size() == 0) {
+                return new RedirectView(cartUrl);
+            }
+            String paymentUrl;
+            try {
+                paymentUrl = paymentService.buyingBooksByAnonymousUser(booksList);
+            } catch (NoSuchAlgorithmException e) {
+                return new RedirectView(cartUrl);
+            }
+            String newCartContents = book2UserService.removeInUserBooksCookies(getBooksSlugsList(booksList), cartContents);
+            book2UserService.changeCookiesContents(new CookiesContents(newCartContents, cookies.get("postponed")), response);
+            return new RedirectView(paymentUrl);
+        }
     }
 
-    private String getNewCookieContent(List<BookDto> booksList) {
+    private Map<String, String> getCookiesList(Cookie[] cookies) {
+        return Arrays.stream(cookies)
+                .collect(Collectors.toMap(c -> c.getName(), c -> c.getValue()));
+    }
+
+    private String getNewCookieContent(List<Book> booksList) {
         return booksList.stream()
                 .map(book -> book.getSlug())
                 .collect(Collectors.joining("/"));

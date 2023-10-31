@@ -8,10 +8,9 @@ import com.example.MyBookShopApp.books.bookfiles.BookFile;
 import com.example.MyBookShopApp.books.bookfiles.BookFileDto;
 import com.example.MyBookShopApp.books.bookfiles.BookFileType;
 import com.example.MyBookShopApp.books.reviews.*;
-import com.example.MyBookShopApp.security.BookStoreUserDetails;
-import com.example.MyBookShopApp.security.BookStoreUserRegister;
-import com.example.MyBookShopApp.security.UserDto;
-import com.example.MyBookShopApp.security.UserRoleType;
+import com.example.MyBookShopApp.security.*;
+import com.example.MyBookShopApp.user_transactions.Transaction;
+import com.example.MyBookShopApp.user_transactions.TransactionDto;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
@@ -26,6 +25,8 @@ public class MappingUtils {
     private static BookReviewService bookReviewService;
     private static BookStoreUserRegister bookStoreUserRegister;
 
+    private static final String DATE_TIME_FORMAT = "dd LLLL yyyy HH:mm";
+
     public MappingUtils(BookAssessmentService bookAssessmentService, BookReviewAssessmentRepository bookReviewAssessmentRepository, BookReviewService bookReviewService, BookStoreUserRegister bookStoreUserRegister) {
         this.bookAssessmentService = bookAssessmentService;
         this.bookReviewAssessmentRepository = bookReviewAssessmentRepository;
@@ -35,9 +36,11 @@ public class MappingUtils {
 
     public static UserDto mapToUserDto(BookStoreUserDetails entity) {
         UserDto dto = new UserDto();
-        dto.setName(entity.getBookStoreUser().getName());
-        dto.setEmail(entity.getBookStoreUser().getEmail());
-        dto.setPhone(entity.getBookStoreUser().getPhone());
+        BookStoreUser bookStoreUser = entity.getBookStoreUser();
+        dto.setName(bookStoreUser.getName());
+        dto.setEmail(bookStoreUser.getEmail());
+        dto.setPhone(bookStoreUser.getPhone());
+        dto.setHash(bookStoreUser.getHash().toString());
         dto.setRoles(entity.getAuthorities().stream().map(a -> UserRoleType.getRoleType(a.toString())).collect(Collectors.toSet()));
         return dto;
     }
@@ -98,6 +101,17 @@ public class MappingUtils {
         }
         dto.setUserLike(like == null ? 0 : like);
 
+        return dto;
+    }
+
+    public static TransactionDto mapToTransactionDto(Transaction transaction) {
+        TransactionDto dto = new TransactionDto();
+        dto.setTime(transaction.getTime().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
+        dto.setSum((transaction.getValue() > 0 ? "+" : "") + transaction.getValue() + " р.");
+        dto.setDescription(transaction.getDescription());
+        dto.setOrderId(transaction.getOrderId());
+        dto.setStatus(transaction.getStatus());
+        dto.setBook(transaction.getBook());
         return dto;
     }
 }

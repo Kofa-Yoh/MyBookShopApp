@@ -4,6 +4,7 @@ import com.example.MyBookShopApp.books.usersbooks.Book2User;
 import com.example.MyBookShopApp.books.assessments.BookAssessment;
 import com.example.MyBookShopApp.books.reviews.BookReview;
 import com.example.MyBookShopApp.books.reviews.BookReviewAssessment;
+import com.example.MyBookShopApp.user_transactions.Transaction;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 @Entity
@@ -32,6 +34,12 @@ public class BookStoreUser {
     @Column(name = "auth_type")
     private AuthenticationType authType;
 
+    private Double balance;
+
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(unique = true, nullable = false)
+    private UUID hash;
+
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<Book2User> book2users = new ArrayList<>();
@@ -47,4 +55,8 @@ public class BookStoreUser {
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<BookReviewAssessment> reviewLikes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Transaction> transactions = new ArrayList<>();
 }

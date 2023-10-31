@@ -4,6 +4,9 @@ import com.example.MyBookShopApp.security.jwt.JWTUtil;
 import com.example.MyBookShopApp.security.jwt.TokenBlacklistService;
 import com.example.MyBookShopApp.security.verification.SmsCode;
 import com.example.MyBookShopApp.security.verification.SmsService;
+import com.example.MyBookShopApp.user_transactions.PaymentService;
+import com.example.MyBookShopApp.user_transactions.TransactionDto;
+import com.example.MyBookShopApp.user_transactions.TransactionPageDto;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,6 +26,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Controller
@@ -38,6 +43,7 @@ public class AuthUserController {
     private final TokenBlacklistService tokenBlacklistService;
     private final SmsService smsService;
     private final JavaMailSender javaMailSender;
+    private final PaymentService paymentService;
 
     @GetMapping("/signin")
     public String handleSignIn() {
@@ -156,8 +162,28 @@ public class AuthUserController {
 
     @GetMapping("/profile")
     public String handleProfile(Model model) {
-        model.addAttribute("curUsr", userRegister.getCurrentUserDto());
         return "profile";
+    }
+
+    @ModelAttribute("transactionHistory")
+    public List<TransactionDto> transactionList(){
+        BookStoreUserDetails currentUser = userRegister.getCurrentUser();
+        if (currentUser == null) {
+            return new ArrayList<>();
+        } else {
+            return paymentService.getPageOfTransactionDtoList(currentUser.getBookStoreUser(), "desc", 0, 50).getContent();
+        }
+    }
+
+    @GetMapping("/transactions")
+    @ResponseBody
+    public TransactionPageDto getTransactionsPage(@RequestParam("sort") String sort, @RequestParam("offset") Integer offset, @RequestParam("limit") Integer limit){
+        BookStoreUserDetails currentUser = userRegister.getCurrentUser();
+        if (currentUser == null) {
+            return new TransactionPageDto(new ArrayList<>());
+        } else {
+            return new TransactionPageDto(paymentService.getPageOfTransactionDtoList(currentUser.getBookStoreUser(), sort, offset, limit).getContent());
+        }
     }
 
     @ModelAttribute("savingResult")
