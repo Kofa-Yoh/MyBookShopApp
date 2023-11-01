@@ -103,7 +103,7 @@
                           </button>
                         </div>
                         <th:block th:if="${savingResult != null}">
-                          <div th:if="${savingResult.result}" class="Profile-success">Профиль успешно сохранен
+                          <div th:if="${savingResult.result}" class="Profile-success">Ссылка для подтверждения сохранения данных отправлена на email
                           </div>
                           <div th:if="${!savingResult.result && savingResult.errors!=''}" class="Profile-error" th:text="${savingResult.errors}">Изменения не сохранены
                           </div>
