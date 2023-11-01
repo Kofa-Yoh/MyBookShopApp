@@ -4,11 +4,13 @@ import com.example.MyBookShopApp.books.usersbooks.Book2User;
 import com.example.MyBookShopApp.books.assessments.BookAssessment;
 import com.example.MyBookShopApp.books.reviews.BookReview;
 import com.example.MyBookShopApp.books.reviews.BookReviewAssessment;
+import com.example.MyBookShopApp.security.verification.UserChanges;
 import com.example.MyBookShopApp.user_transactions.Transaction;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.UUID;
 @Table(name = "users")
 @Getter
 @Setter
+@ToString
 public class BookStoreUser {
 
     @Id
@@ -59,4 +62,8 @@ public class BookStoreUser {
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<Transaction> transactions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<UserChanges> changes = new ArrayList<>();
 }

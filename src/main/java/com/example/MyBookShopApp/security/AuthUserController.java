@@ -4,6 +4,8 @@ import com.example.MyBookShopApp.security.jwt.JWTUtil;
 import com.example.MyBookShopApp.security.jwt.TokenBlacklistService;
 import com.example.MyBookShopApp.security.verification.SmsCode;
 import com.example.MyBookShopApp.security.verification.SmsService;
+import com.example.MyBookShopApp.security.verification.UserChanges;
+import com.example.MyBookShopApp.security.verification.UserChangesRepository;
 import com.example.MyBookShopApp.user_transactions.PaymentService;
 import com.example.MyBookShopApp.user_transactions.TransactionDto;
 import com.example.MyBookShopApp.user_transactions.TransactionPageDto;
@@ -14,10 +16,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +30,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Controller
 @AllArgsConstructor
@@ -44,6 +48,7 @@ public class AuthUserController {
     private final SmsService smsService;
     private final JavaMailSender javaMailSender;
     private final PaymentService paymentService;
+    private final UserChangesRepository userChangesRepository;
 
     @GetMapping("/signin")
     public String handleSignIn() {
@@ -100,16 +105,17 @@ public class AuthUserController {
     @ResponseBody
     public ContactConfirmationResponse handleRequestEmailConfirmation(@RequestBody ContactConfirmationPayload payload) {
         ContactConfirmationResponse response = new ContactConfirmationResponse();
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(email);
-        message.setTo(payload.getContact());
+
         SmsCode smsCode = new SmsCode(smsService.generateCode(), 300); // 5 min
         smsService.saveNewCode(smsCode);
-        message.setSubject("Bookstore email verification");
-        message.setText("Verification code is: " + smsCode.getCode());
-        javaMailSender.send(message);
-        response.setResult("true");
-        return response;
+        try {
+            sendMessageByEmail(payload.getContact(), "Bookstore email verification", "Verification code is: " + smsCode.getCode());
+            response.setResult("true");
+            return response;
+        } catch (MailException e) {
+            response.setResult("false");
+            return response;
+        }
     }
 
     @PostMapping("/approveContact")
@@ -166,7 +172,7 @@ public class AuthUserController {
     }
 
     @ModelAttribute("transactionHistory")
-    public List<TransactionDto> transactionList(){
+    public List<TransactionDto> transactionList() {
         BookStoreUserDetails currentUser = userRegister.getCurrentUser();
         if (currentUser == null) {
             return new ArrayList<>();
@@ -177,7 +183,7 @@ public class AuthUserController {
 
     @GetMapping("/transactions")
     @ResponseBody
-    public TransactionPageDto getTransactionsPage(@RequestParam("sort") String sort, @RequestParam("offset") Integer offset, @RequestParam("limit") Integer limit){
+    public TransactionPageDto getTransactionsPage(@RequestParam("sort") String sort, @RequestParam("offset") Integer offset, @RequestParam("limit") Integer limit) {
         BookStoreUserDetails currentUser = userRegister.getCurrentUser();
         if (currentUser == null) {
             return new TransactionPageDto(new ArrayList<>());
@@ -195,24 +201,101 @@ public class AuthUserController {
 
     @PostMapping("/saveProfile")
     public String handleProfileSaving(ProfileForm payload,
-                                      HttpServletResponse httpServletResponse,
                                       RedirectAttributes redirectAttributes) {
-        ProfileSavingResults results = userRegister.changeUser(payload);
-        if (results != null && results.getUser() != null) {
-            ContactConfirmationResponse token = new ContactConfirmationResponse();
-            if (results.getUser().getEmail() != null && !results.getUser().getEmail().equals("")) {
-                token = userRegister.jwtLogin(
-                        new ContactConfirmationPayload(results.getUser().getEmail(), ""));
-            } else if (results.getUser().getPhone() != null && !results.getUser().getPhone().equals("")) {
-                token = userRegister.jwtLoginByPhoneNumber(
-                        new ContactConfirmationPayload(results.getUser().getPhone(), ""));
-            }
-            Cookie cookie = new Cookie("token", token.getResult());
-            cookie.setPath("/");
-            httpServletResponse.addCookie(cookie);
+        String url = "redirect:/profile";
+        ProfileSavingResults result = new ProfileSavingResults();
+        result.setResult(false);
+        Boolean isChanged = false;
+
+        BookStoreUserDetails bookStoreUserDetails = userRegister.getCurrentUser();
+        if (bookStoreUserDetails == null) {
+            result.setErrors("Пользователь не определен. Выполните вход в личный кабинет еще раз.");
+            redirectAttributes.addFlashAttribute("savingResult", result);
+            return url;
         }
-        redirectAttributes.addFlashAttribute("savingResult", results);
-        return "redirect:/profile";
+
+        BookStoreUser user = bookStoreUserDetails.getBookStoreUser();
+        UserChanges changes = new UserChanges();
+
+        if (payload.getPassword() != null && !payload.getPassword().equals("")) {
+            String newPassword = payload.getPassword().trim();
+
+            if (!newPassword.equals(payload.getPasswordReply().trim())) {
+                result.setErrors("Введенные пароли должны совпадать.");
+                redirectAttributes.addFlashAttribute("savingResult", result);
+                return url;
+            }
+
+            changes.setPassword(new BCryptPasswordEncoder().encode(newPassword));
+            isChanged = true;
+        }
+        if (payload.getName() != null && !payload.getName().trim().equals("") && !payload.getName().equals(user.getName())) {
+            changes.setName(payload.getName().trim());
+            isChanged = true;
+        }
+        if (payload.getMail() != null && !payload.getMail().equals("") && !payload.getMail().equals(user.getEmail())) {
+            changes.setEmail(payload.getMail());
+            isChanged = true;
+        }
+        if (payload.getPhone() != null && !payload.getPhone().equals("") && !payload.getPhone().equals(user.getPhone())) {
+            changes.setPhone(payload.getPhone());
+            isChanged = true;
+        }
+
+        if (!isChanged) {
+            result.setErrors("Данные не изменены.");
+            redirectAttributes.addFlashAttribute("savingResult", result);
+            return url;
+        }
+
+        changes.setUser(user);
+        UserChanges userChanges = userChangesRepository.save(changes);
+        String redirectLink = "http://localhost:8089/approveProfileSaving/c=" +
+                userChanges.getId() + "&u=" + user.getHash();
+        String textMessage = "Подтвердите изменения вашего профиля, перейдите по ссылке: " + redirectLink;
+        try {
+            sendMessageByEmail(user.getEmail(), "Saving profile verification", textMessage);
+            result.setResult(true);
+            redirectAttributes.addFlashAttribute("savingResult", result);
+            return url;
+        } catch (MailException e) {
+            result.setErrors("Не удалось отправить подтверждение на email.");
+            redirectAttributes.addFlashAttribute("savingResult", result);
+            return url;
+        }
+    }
+
+    @GetMapping("/approveProfileSaving/{payload}")
+    public String handleApproveProfileSaving(@PathVariable("payload") String payload,
+                                             HttpServletRequest request,
+                                             HttpServletResponse response) {
+        String url = "redirect:/profile";
+        Map<String, String> payloadMap = getPayloadMap(payload);
+        if (payloadMap.get("c") == null || payloadMap.get("u") == null) {
+            return url;
+        }
+
+        UserChanges changes = userChangesRepository.findUserChangesById(Long.valueOf(payloadMap.get("c")));
+        if (changes == null) {
+            return url;
+        }
+        BookStoreUser user = changes.getUser();
+        if (changes.getName() != null) {
+            user.setName(changes.getName());
+        }
+        if (changes.getEmail() != null) {
+            user.setEmail(changes.getEmail());
+        }
+        if (changes.getPhone() != null) {
+            user.setPhone(changes.getPhone());
+        }
+        if (changes.getPassword() != null) {
+            user.setPassword(changes.getPassword());
+        }
+
+        userRegister.changeUser(user);
+        String token = getTokenCookie(request);
+        return clearSession(token, request, response);
     }
 
     @GetMapping("/user_logout")
@@ -220,6 +303,10 @@ public class AuthUserController {
                                HttpServletRequest request,
                                HttpServletResponse response) {
 
+        return clearSession(tokenCookie, request, response);
+    }
+
+    private String clearSession(String tokenCookie, HttpServletRequest request, HttpServletResponse response) {
         addTokenInBlacklist(tokenCookie);
 
         Cookie cookie = new Cookie("token", "");
@@ -235,6 +322,26 @@ public class AuthUserController {
         SecurityContextHolder.clearContext();
 
         return "redirect:/signin";
+    }
+
+    private Map<String, String> getPayloadMap(String payload) {
+        if (payload.length() == 0) {
+            return new HashMap<>();
+        }
+        return Arrays.stream(payload.split("&"))
+                .map(elem -> elem.split("="))
+                .collect(Collectors.toMap(elem -> elem[0], elem -> elem[1]));
+    }
+
+    private String getTokenCookie(HttpServletRequest request) {
+        String token = "";
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("token")) {
+                token = cookie.getValue();
+            }
+        }
+        return token;
     }
 
     private void addTokenInBlacklist(String tokenCookie) {
@@ -257,5 +364,14 @@ public class AuthUserController {
                 Logger.getLogger(this.getClass().getSimpleName()).warning(e.getMessage());
             }
         }
+    }
+
+    private void sendMessageByEmail(String sendTo, String subject, String text) throws MailException {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(email);
+        message.setTo(sendTo);
+        message.setSubject(subject);
+        message.setText(text);
+        javaMailSender.send(message);
     }
 }
