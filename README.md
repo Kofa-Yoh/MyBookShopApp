@@ -52,20 +52,16 @@ In these readme: <a href="#structure">The main parts of the project (Structure)<
 * Book purchase with Robokassa
 
 ### Screenshots
-<details><summary>Here</summary>
-  
-* Main page with recommended books  
-![books](https://github.com/Kofa-Yoh/MyBookShopApp/assets/117309392/00827619-381f-4482-abe7-161b3cfd17a2)
-* Book page
-![book](https://github.com/Kofa-Yoh/MyBookShopApp/assets/117309392/da625815-28b7-492d-aa34-8c3c2a7c94a8)
-* Cart page
-![cart](https://github.com/Kofa-Yoh/MyBookShopApp/assets/117309392/4bafbc1d-4e26-46a5-badf-fa6d4730aabb)
-* Profile page
-![profile](https://github.com/Kofa-Yoh/MyBookShopApp/assets/117309392/6d284865-2a3f-4f9c-b72e-993d9b0a7e12)
-* Transactions Section
-![transactions](https://github.com/Kofa-Yoh/MyBookShopApp/assets/117309392/72895e0c-df3b-451b-bfd6-590fbad8c072)
+<p align="center">
+<img src="https://github.com/Kofa-Yoh/MyBookShopApp/assets/117309392/00827619-381f-4482-abe7-161b3cfd17a2" alt="Main page" height="300px">
+<br>
+<img src="https://github.com/Kofa-Yoh/MyBookShopApp/assets/117309392/da625815-28b7-492d-aa34-8c3c2a7c94a8" alt="Book page" height="450px">
+<img src="https://github.com/Kofa-Yoh/MyBookShopApp/assets/117309392/4bafbc1d-4e26-46a5-badf-fa6d4730aabb" alt="Cart page" height="450px">
+<br>
+<img src="https://github.com/Kofa-Yoh/MyBookShopApp/assets/117309392/69b8f9a6-d416-4fd7-a43e-1bbb15609cb9" alt="Profile page" height="300px">
+<img src="https://github.com/Kofa-Yoh/MyBookShopApp/assets/117309392/72895e0c-df3b-451b-bfd6-590fbad8c072" alt="Transaction page" height="300px">
+</p>
 
-</details>
 
 ### Stack
 
